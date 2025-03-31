@@ -7,14 +7,18 @@ using System.Threading.Tasks;
 
 namespace E_Commerce.Data.Entities
 {
-    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+    public class AppDbContext : DbContext
     {
-        public required DbSet<Product> Products { get; set; }
-        public required DbSet<Category> Categories { get; set; }
-        public required DbSet<User> Users { get; set; }
-        public required DbSet<Cupon> Cupons { get; set; }
-        public required DbSet<Order> Orders { get; set; }
-        public required DbSet<OrderDetail> OrderDetails { get; set; }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+        }
+
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Cupon> Cupons { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
     }
-    
+
 }
