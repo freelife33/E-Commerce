@@ -17,9 +17,10 @@ namespace E_Commerce.Data.Entities
         public int StockQuantity { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
-        public bool IsActive { get; set; }
-        public bool IsDeleted { get; set; }
+        public bool IsActive { get; set; }=true;
+        public bool IsDeleted { get; set; } = false;
         public Category? Category { get; set; }
+        public ICollection<ProductImage> Images { get; set; } = new List<ProductImage>();
 
     }
 }

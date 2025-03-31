@@ -17,7 +17,7 @@ namespace E_Commerce.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var products =await _unitOfWork.Products.GetAllAsync();
-            return View(products);
+            return View(products.Where(c=>c.IsDeleted==false).ToList());
         }
 
         public async Task<IActionResult> Details(int id)
@@ -59,6 +59,8 @@ namespace E_Commerce.Web.Controllers
             {
                 return NotFound();
             }
+            var categories = await _unitOfWork.Categories.GetAllAsync();
+            ViewBag.Categories = new SelectList(categories, "Id", "Name");
             return View(product);
         }
 
@@ -83,6 +85,8 @@ namespace E_Commerce.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            var categories = await _unitOfWork.Categories.GetAllAsync();
+            ViewBag.Categories = new SelectList(categories, "Id", "Name");
             return View(product);
         }
 
@@ -96,12 +100,13 @@ namespace E_Commerce.Web.Controllers
             return View(product);
         }
 
-        [HttpPost, ActionName("Delete")]
+        [HttpPost("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var product = await _unitOfWork.Products.GetByIdAsync(id)!;
-            _unitOfWork.Products.Remove(product!);
+            //_unitOfWork.Products.Remove(product!);
+            product!.IsDeleted = true;
             await _unitOfWork.ComplateAsync();
             return RedirectToAction(nameof(Index));
         }
