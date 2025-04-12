@@ -1,0 +1,4 @@
+﻿ <!-- Bu sabit, ama biz gerçek dosyaları manuel oluşturacağız -->
+
+
+Repositories başarıyla oluşturuldu.

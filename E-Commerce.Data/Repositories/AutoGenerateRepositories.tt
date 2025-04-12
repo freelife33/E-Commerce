@@ -1,0 +1,57 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ output extension=".txt" #> <!-- Bu sabit, ama biz gerçek dosyaları manuel oluşturacağız -->
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+<#
+    // Entity adları
+    var entities = new List<string> {
+        "Auction", "AuctionImage", "Bid", "Cart", "CartItem", "Favorite",
+        "Invoice", "Log", "Notification", "Payment", "ProductImage",
+        "ProductRating", "ProductReview", "ReturnRequest", "Shipment",
+        "Stock", "Wishlist", "WishlistItem"
+    };
+
+    // Proje dizinleri
+    string projectRoot = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(Host.TemplateFile), ".."));
+    string interfacePath = Path.Combine(projectRoot, "Repositories", "Interfaces");
+    string implementationPath = Path.Combine(projectRoot, "Repositories", "Implementations");
+
+    Directory.CreateDirectory(interfacePath);
+    Directory.CreateDirectory(implementationPath);
+
+    foreach (var entity in entities)
+    {
+        string iFile = Path.Combine(interfacePath, $"I{entity}Repository.cs");
+        string cFile = Path.Combine(implementationPath, $"{entity}Repository.cs");
+
+        // Interface içeriği
+        var iContent = 
+$@"using E_Commerce.Data.Entities;
+
+namespace E_Commerce.Data.Repositories.Interfaces
+{{
+    public interface I{entity}Repository : IRepository<{entity}> {{ }}
+}}";
+
+        // Repository içeriği
+        var cContent =
+$@"using E_Commerce.Data.Entities;
+using E_Commerce.Data.Repositories.Interfaces;
+
+namespace E_Commerce.Data.Repositories.Implementations
+{{
+    public class {entity}Repository : Repository<{entity}>, I{entity}Repository
+    {{
+        public {entity}Repository(AppDbContext context) : base(context) {{ }}
+    }}
+}}";
+
+        File.WriteAllText(iFile, iContent, Encoding.UTF8);
+        File.WriteAllText(cFile, cContent, Encoding.UTF8);
+    }
+#>
+
+Repositories başarıyla oluşturuldu.

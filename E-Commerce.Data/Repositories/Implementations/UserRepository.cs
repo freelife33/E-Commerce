@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace E_Commerce.Data.Repositories.Iplementations
+namespace E_Commerce.Data.Repositories.Implementations
 {
-    public class CuponRepository(AppDbContext context) : Repository<Cupon>(context), ICuponRepository
+    public class UserRepository(AppDbContext context) : Repository<User>(context), IUserRepository
     {
     }
 }

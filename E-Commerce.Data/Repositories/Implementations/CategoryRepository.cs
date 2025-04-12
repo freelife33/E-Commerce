@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace E_Commerce.Data.Repositories.Iplementations
+namespace E_Commerce.Data.Repositories.Implementations
 {
-    public class OrderDetailRepository(AppDbContext context) : Repository<OrderDetail>(context), IOrderDetailRepository
+    public class CategoryRepository(AppDbContext context) : Repository<Category>(context), ICategoryRepository
     {
     }
 }
