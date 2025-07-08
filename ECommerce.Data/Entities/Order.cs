@@ -11,13 +11,18 @@ namespace ECommerce.Data.Entities
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal TotalAmount { get; set; }
-        public int UserId { get; set; }
+        public int? UserId { get; set; }
 
         [ForeignKey("UserId")]
-        public User User { get; set; }
+        public User? User { get; set; }
         public string Status { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
+        public Payment Payment { get; set; }
+        public Invoice Invoice { get; set; }
+        public Shipment Shipment { get; set; }
+        public ICollection<ReturnRequest> ReturnRequests { get; set; }
+        public ICollection<Log> Logs { get; set; }
 
-        
+
     }
 }

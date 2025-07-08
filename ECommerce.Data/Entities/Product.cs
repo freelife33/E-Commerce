@@ -24,6 +24,12 @@ namespace ECommerce.Data.Entities
         public bool IsDeleted { get; set; } = false;
         public Category Category { get; set; }
         public ICollection<ProductImage> Images { get; set; } = new List<ProductImage>();
-
+        public ICollection<OrderDetail> OrderDetails { get; set; }
+        public ICollection<CartItem> CartItems { get; set; }
+        public ICollection<WishlistItem> WishlistItems { get; set; }
+        public ICollection<ProductReview> ProductReviews { get; set; }
+        public ICollection<ProductRating> ProductRatings { get; set; }
+        public ICollection<Auction> Auctions { get; set; }
+        public Stock Stock { get; set; }
     }
 }

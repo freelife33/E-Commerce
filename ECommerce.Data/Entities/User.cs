@@ -44,5 +44,16 @@ namespace ECommerce.Data.Entities
 
         // Navigation property for user's orders
         public ICollection<Order> Orders { get; set; }
+
+        public Cart Cart { get; set; }
+        public ICollection<Wishlist> Wishlists { get; set; }
+        public ICollection<Bid> Bids { get; set; }
+        public ICollection<Notification> Notifications { get; set; }
+        public ICollection<ReturnRequest> ReturnRequests { get; set; }
+        public ICollection<ProductReview> ProductReviews { get; set; }
+        public ICollection<ProductRating> ProductRatings { get; set; }
+        public ICollection<Log> Logs { get; set; }
+
+
     }
 }

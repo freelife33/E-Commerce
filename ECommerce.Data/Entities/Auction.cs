@@ -10,7 +10,7 @@ namespace ECommerce.Data.Entities
     public class Auction
     {
         public int Id { get; set; }
-        public string? ProductName { get; set; }
+        public string ProductName { get; set; }
         public decimal StartingPrice { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
