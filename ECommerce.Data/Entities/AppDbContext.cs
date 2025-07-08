@@ -13,6 +13,22 @@ namespace ECommerce.Data.Entities
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Auction>()
+                .HasMany(a => a.Bids)
+                .WithOne(b => b.Auction)
+                .HasForeignKey(b => b.AuctionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Auction>()
+                .HasOne(a => a.WinningBid)
+                .WithMany()
+                .HasForeignKey(a => a.WinningBidId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            base.OnModelCreating(modelBuilder);
+        }
         public DbSet<Product> Products { get; set; }//24
         public DbSet<Category> Categories { get; set; }
         public DbSet<User> Users { get; set; }

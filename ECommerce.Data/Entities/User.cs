@@ -14,10 +14,10 @@ namespace ECommerce.Data.Entities
         [Required]
         [StringLength(50)]
         public string UserName { get; set; }
-                     
-        [Required]   
-        public string PasswordHash { get; set; }
-                     
+
+        public byte[] PasswordHash { get; set; }
+        public byte[] PasswordSalt { get; set; }
+
         [StringLength(100)]
         public string FullName { get; set; }
                      
@@ -43,16 +43,16 @@ namespace ECommerce.Data.Entities
         public bool IsPhoneNumberConfirmed { get; set; }
 
         // Navigation property for user's orders
-        public ICollection<Order> Orders { get; set; }
+        public ICollection<Order> Orders { get; set; } = new List<Order>();
 
         public Cart Cart { get; set; }
-        public ICollection<Wishlist> Wishlists { get; set; }
-        public ICollection<Bid> Bids { get; set; }
-        public ICollection<Notification> Notifications { get; set; }
-        public ICollection<ReturnRequest> ReturnRequests { get; set; }
-        public ICollection<ProductReview> ProductReviews { get; set; }
-        public ICollection<ProductRating> ProductRatings { get; set; }
-        public ICollection<Log> Logs { get; set; }
+        public ICollection<Wishlist> Wishlists { get; set; } = new List<Wishlist>();
+        public ICollection<Bid> Bids { get; set; } = new List<Bid>();
+        public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+        public ICollection<ReturnRequest> ReturnRequests { get; set; } = new List<ReturnRequest>();
+        public ICollection<ProductReview> ProductReviews { get; set; } = new List<ProductReview>();
+        public ICollection<ProductRating> ProductRatings { get; set; } = new List<ProductRating>();
+        public ICollection<Log> Logs { get; set; } = new List<Log>();
 
 
     }

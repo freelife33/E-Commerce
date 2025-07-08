@@ -13,4 +13,8 @@
     </PackageReference> <!-- Add this line -->
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>
