@@ -10,7 +10,7 @@ namespace ECommerce.Business.Services
     public interface IAuthService
     {
         Task<User> RegisterAsync(string username, string email, string password);
-        Task<string> LoginAsync(string username, string password);
+        Task<string> LoginAsync(string email, string password);
         Task<bool> UserExistAsync(string email);
     }
 }

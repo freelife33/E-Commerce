@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerce.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250708225112_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250710144632_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -583,6 +583,34 @@ namespace ECommerce.Data.Migrations
                     b.ToTable("ReturnRequests");
                 });
 
+            modelBuilder.Entity("ECommerce.Data.Entities.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+                });
+
             modelBuilder.Entity("ECommerce.Data.Entities.Shipment", b =>
                 {
                     b.Property<int>("Id")
@@ -670,9 +698,11 @@ namespace ECommerce.Data.Migrations
                     b.Property<bool>("IsPhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<byte[]>("PasswordHash")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
@@ -688,6 +718,21 @@ namespace ECommerce.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("ECommerce.Data.Entities.UserRole", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("UserRoles");
                 });
 
             modelBuilder.Entity("ECommerce.Data.Entities.Wishlist", b =>
@@ -991,6 +1036,25 @@ namespace ECommerce.Data.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("ECommerce.Data.Entities.UserRole", b =>
+                {
+                    b.HasOne("ECommerce.Data.Entities.Role", "Role")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ECommerce.Data.Entities.User", "User")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("ECommerce.Data.Entities.Wishlist", b =>
                 {
                     b.HasOne("ECommerce.Data.Entities.User", "User")
@@ -1070,6 +1134,11 @@ namespace ECommerce.Data.Migrations
                     b.Navigation("WishlistItems");
                 });
 
+            modelBuilder.Entity("ECommerce.Data.Entities.Role", b =>
+                {
+                    b.Navigation("UserRoles");
+                });
+
             modelBuilder.Entity("ECommerce.Data.Entities.User", b =>
                 {
                     b.Navigation("Bids");
@@ -1087,6 +1156,8 @@ namespace ECommerce.Data.Migrations
                     b.Navigation("ProductReviews");
 
                     b.Navigation("ReturnRequests");
+
+                    b.Navigation("UserRoles");
 
                     b.Navigation("Wishlists");
                 });

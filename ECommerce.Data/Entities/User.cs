@@ -42,7 +42,9 @@ namespace ECommerce.Data.Entities
 
         public bool IsPhoneNumberConfirmed { get; set; }
 
-        // Navigation property for user's orders
+
+        public ICollection<UserRole> UserRoles { get; set; }=  new List<UserRole>();
+
         public ICollection<Order> Orders { get; set; } = new List<Order>();
 
         public Cart Cart { get; set; }
