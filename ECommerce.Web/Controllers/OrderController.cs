@@ -1,88 +1,206 @@
-﻿using ECommerce.Data.Entities;
+﻿using AutoMapper;
+using ECommerce.Business.Managers;
+using ECommerce.Business.Services;
+using ECommerce.Business.Services.OrderFacade;
+using ECommerce.Data.Entities;
+using ECommerce.Data.Repositories.Implementations;
 using ECommerce.Data.Repositories.Interfaces;
+using ECommerce.DTOs.Address;
+using ECommerce.DTOs.Cart;
+using ECommerce.DTOs.Order;
+using ECommerce.DTOs.Payment;
+using ECommerce.Web.Models.Order;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Runtime.InteropServices;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ECommerce.Web.Controllers
 {
     public class OrderController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
-
-        public OrderController(IUnitOfWork unitOfWork)
+        private readonly IOrderFacadeService _orderFacadeService;
+       
+        public OrderController(
+           
+            IOrderFacadeService orderFacadeService)
         {
-            _unitOfWork = unitOfWork;
+                      
+            _orderFacadeService = orderFacadeService;
         }
 
-        public async Task<IActionResult> Index()
+        // GET: /Order/Checkout
+        [HttpGet]
+        public async Task<IActionResult> Checkout()
         {
-            var orders = await _unitOfWork.Orders.GetAllAsync();
-            return View(orders);
+            var dto = await _orderFacadeService.PrepareCheckoutPageAsync(HttpContext);
+
+            var model = new PlaceOrderViewModel
+            {
+                SubTotal = dto.SubTotal,
+                AddressList = dto.AddressList
+            };
+
+            return View(model);
         }
 
-        public async Task<IActionResult> Details(int id)
+
+
+        // POST: /Order/Checkout
+        [HttpPost]
+        public async Task<IActionResult> Checkout(PlaceOrderViewModel model)
         {
-            var order = await _unitOfWork.Orders.GetByIdAsync(id)!;
-            return View(order);
+            if (!ModelState.IsValid)
+            {
+                model.AddressList = await _orderFacadeService.GetUserAddressSelectListAsync();
+                return View(model);
+            }
+
+            var dto = new OrderInputDto
+            {
+                CuponCode = model.CuponCode,
+                GuestFullName = model.GuestFullName,
+                GuestAddress = model.GuestAddress,
+                GuestStreet = model.GuestStreet,
+                GuestCity = model.GuestCity,
+                GuestPostalCode = model.GuestPostalCode,
+                NewAddressTitle = model.NewAddressTitle,
+                NewAddressDetail = model.NewAddressDetail,
+                SelectedAddressId = model.SelectedAddressId,
+                SubTotal = model.SubTotal // DTO’ya eklediysen
+            };
+
+            var result = await _orderFacadeService.PlaceOrderAsync(dto, HttpContext);
+
+            if (!result.Success)
+            {
+                ModelState.AddModelError(string.Empty, result.ErrorMessage ?? "Sipariş oluşturulamadı.");
+                return View(model);
+            }
+
+            return RedirectToAction("Review", new { addressId = result.AddressId, orderId = result.OrderId });
+
         }
 
-        public IActionResult Create()
+
+
+        [HttpGet]
+        public async Task<IActionResult> Review(int? addressId, int orderId)
         {
-           return View();
+            try
+            {
+                // Facade servisten DTO'yu al
+                var dto = await _orderFacadeService.GetOrderReviewAsync(addressId, orderId, HttpContext);
+
+                // DTO → ViewModel dönüşümü
+                var model = new OrderReviewViewModel
+                {
+                    OrderId = dto.OrderId,
+                    CartItems = dto.CartItems,
+                    Address = dto.Address,
+                    AddressId = dto.AddressId,
+                    SubTotal = dto.SubTotal,
+                    Discount = dto.Discount,
+                    Shipping = dto.Shipping,
+                    CuponId = dto.CuponId
+                };
+
+                return View(model);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Cart");
+            }
         }
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> Payment(int id)
+        {
+            var formModel = await _orderFacadeService.GetPaymentFormDataAsync(HttpContext);
+            var model = new UnifiedPaymentViewModel
+            {
+                OrderId = id,
+                BankAccounts = formModel.BankAccounts,
+                PaymentMethods = formModel.PaymentMethods
+            };
+
+            return View(model);
+        }
+
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Order order)
+        public async Task<IActionResult> Payment(UnifiedPaymentViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _unitOfWork.Orders.AddAsync(order);
-                await _unitOfWork.ComplateAsync();
-                return RedirectToAction(nameof(Index));
+                var formModel = await _orderFacadeService.GetPaymentFormDataAsync(HttpContext);
+                model.BankAccounts = formModel.BankAccounts;
+                model.PaymentMethods = formModel.PaymentMethods;
+
+                return View(model);
             }
-            return View(order);
-        }
 
-        public async Task<IActionResult> Edit(int id)
-        {
-            var order = await _unitOfWork.Orders.GetByIdAsync(id)!;
-            return View(order);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Order order)
-        {
-            if (id != order.Id)
+            var dto = new PaymentInputDto
             {
-                return BadRequest();
-            }
-            if (ModelState.IsValid)
-            {
-                _unitOfWork.Orders.Update(order);
-                await _unitOfWork.ComplateAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(order);
+                OrderId = model.OrderId,
+                PaymentMethod = model.PaymentMethod
+            };
+
+            var success = await _orderFacadeService.ConfirmPaymentAsync(dto, HttpContext);
+            if (!success) return NotFound();
+
+            return RedirectToAction("Success", new { id = model.OrderId });
         }
 
-        public async Task<IActionResult> Delete(int id)
-        {
-            var order = await _unitOfWork.Orders.GetByIdAsync(id)!;
-            return View(order);
-        }
 
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        // GET: /Order/Success
+        [HttpGet]
+        public async Task<IActionResult> Success(int id)
         {
-            var order = await _unitOfWork.Orders.GetByIdAsync(id)!;
-            if (order == null)
-            {
+            var orderNumber = await _orderFacadeService.GenerateOrderSuccessNumberAsync(id, HttpContext);
+            if (string.IsNullOrEmpty(orderNumber))
                 return NotFound();
-            }
-            _unitOfWork.Orders.Remove(order);
-            await _unitOfWork.ComplateAsync();
-            return RedirectToAction(nameof(Index));
+
+            ViewBag.OrderNumber = orderNumber;
+            return View();
         }
+
+
+
+        public IActionResult Index()
+        {
+
+            return View();
+        }
+
+        public async Task<IActionResult> MyOrders()
+        {
+            var dtoList = await _orderFacadeService.GetUserOrdersAsync(HttpContext);
+
+            // DTO → ViewModel dönüşümü
+            var viewModel = dtoList.Select(dto => new OrderSummaryViewModel
+            {
+                OrderId = dto.OrderId,
+                OrderDate = dto.OrderDate,
+                TotalAmount = dto.TotalAmount,
+                DiscountAmount = dto.DiscountAmount,
+                Status = dto.Status,
+                AddressSummary = dto.AddressSummary,
+                CuponCode = dto.CuponCode
+            }).ToList();
+            return View(viewModel);
+        }
+
+
     }
 }

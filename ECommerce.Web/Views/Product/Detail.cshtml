@@ -1,0 +1,229 @@
+﻿@using ECommerce.DTOs.Product
+@using ECommerce.Web.Helpers
+@model ProductDetailDto
+@{
+    ViewData["Title"] = @Model.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@* 
+<div class="container py-5">
+    <div class="row g-4">
+        <!-- Ürün görselleri -->
+        <div class="col-lg-6">
+            <!-- Büyük resim -->
+            <div class="border rounded shadow-sm mb-3 p-2 text-center bg-white">
+                <img id="mainImage" src="@PathHelper.ToImagePath(Model.CoverImageUrl)"
+                alt="@Model.Name" class="img-fluid rounded transition" style="max-height: 400px;" />
+            </div>
+
+            <!-- Thumbnail'lar -->
+            @if (Model.Images != null && Model.Images.Count > 0)
+            {
+                <div class="d-flex flex-wrap gap-2 justify-content-center">
+                    @foreach (var img in Model.Images)
+                    {
+                        <img src="@PathHelper.ToImagePath(img.ImageUrl)" alt="Alt Resim"
+                        class="img-thumbnail border change-main"
+                        style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
+                        data-full="@PathHelper.ToImagePath(img.ImageUrl)" />
+                    }
+                </div>
+            }
+        </div>
+
+        <!-- Ürün bilgileri -->
+        <div class="col-lg-6">
+            <div class="bg-white border rounded shadow-sm p-4 h-100">
+                <h1 class="h3 mb-3">@Model.Name</h1>
+                <p class="text-muted mb-1">@Model.CategoryName</p>
+                <h4 class="text-success mb-3">@Model.Price.ToString("C")</h4>
+
+                <p class="mb-4">@Model.Description</p>
+
+                <form method="post" asp-controller="Cart" asp-action="Add" class="mb-0">
+                    <input type="hidden" name="productId" value="@Model.Id" />
+                    <div class="mb-3">
+                        <label class="form-label">Adet</label>
+                        <input type="number" name="quantity" value="1" min="1" class="form-control w-25" />
+                    </div>
+                    <button type="submit" class="btn btn-dark btn-lg w-100">
+                        <i class="fa fa-shopping-cart me-2"></i> Sepete Ekle
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        const thumbnails = document.querySelectorAll(".change-main");
+        const mainImage = document.getElementById("mainImage");
+
+        thumbnails.forEach(thumb => {
+        thumb.addEventListener("click", function () {
+        const newSrc = this.getAttribute("data-full");
+        if (mainImage.src !== newSrc) {
+        mainImage.classList.add("fade-out");
+
+        setTimeout(() => {
+        mainImage.src = newSrc;
+        mainImage.classList.remove("fade-out");
+        mainImage.classList.add("fade-in");
+        setTimeout(() => mainImage.classList.remove("fade-in"), 200);
+        }, 200);
+        }
+        });
+        });
+        });
+    </script>
+    <style>
+        .fade-out {
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        }
+
+        .fade-in {
+        opacity: 1;
+        transition: opacity 0.2s ease;
+        }
+    </style>
+}
+
+ *@
+
+
+<div class="wrappage">
+    <!--content-->
+    <div class="container container-240">
+        <div class="single-product-detail product-bundle product-aff">
+            <ul class="breadcrumb">
+                <li><a href="@Url.Action("Index", "Home")">Anasayfa</a></li>
+                <li class="active"><a href="@Url.Action("Index", "Store", new { categoryId = Model.CategoryId })"> @Model.CategoryName </a></li>
+                <li>@Model.Name</li>
+            </ul>
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-6">
+
+                    <div class="flex product-img-slide">
+
+
+                        <div class="product-images">
+                            <div class="main-img js-product-slider">
+
+                                @if (Model.Images != null && Model.Images.Count > 0)
+                                {
+                                    @foreach (var img in Model.Images)
+                                    {
+                                        <a href="#" class="hover-images effect"><img src="@PathHelper.ToImagePath(img.ImageUrl)" alt="photo" class="img-reponsive"></a>
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <div class="multiple-img-list-ver2 js-click-product">
+
+                            
+
+
+                                @if (Model.Images != null && Model.Images.Count > 0)
+                                {
+                                    @foreach (var img in Model.Images)
+                                    {
+                                        <div class="product-col">
+                                        <div class="img">
+                                            <img src="@PathHelper.ToImagePath(img.ImageUrl)" alt="images" class="img-responsive">
+                                        </div>
+                                    </div>
+
+                                    }
+                                }                           
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-6">
+                    <div class="single-flex">
+                        <div class="single-product-info product-info product-grid-v2 s-50">
+                            <p class="product-cate">@Model.CategoryName</p>
+                            <div class="product-rating">
+                                <span class="star star-5"></span>
+                                <span class="star star-4"></span>
+                                <span class="star star-3"></span>
+                                <span class="star star-2"></span>
+                                <span class="star star-1"></span>
+                                @{
+                                    var random = new Random();
+                                    double sayi = random.Next(1, 500);
+                                    sayi = sayi + Model.AverageRating;
+                                }
+                                <div class="number-rating">(  @sayi görüntüleme )</div>
+                            </div>
+                            <h3 class="product-title"><a href="#">@Model.Name</a></h3>
+                            <div class="product-price">
+                                <span>@Model.Price.ToString("C2")</span>
+                            </div>
+                            <div class="availability">
+                                @{
+                                    string stock = "Şuan stokta yok";
+                                    if (Model.Stock > 0)
+                                    {
+                                        stock = "Stokta mevcut";
+                                    }
+                                }
+                                <p class="product-inventory"> <label>Stok Durumu : </label><span> @stock</span></p>
+                            </div>
+                            <div class="product-brand">
+                                <p>Brand :</p>
+                                <img src="img/single/sony_brand.png" alt="">
+                            </div>
+                            <div class="product-sku">
+                                <label>SKU :</label><span> 8900105789430</span>
+                            </div>
+                            <div class="short-desc">
+                                <p class="product-desc">
+                                    @Model.Description
+                                </p>
+                            </div>
+
+                            <div class="single-product-button-group">
+                                <form asp-controller="Cart" asp-action="Add" method="post" id="addToCartForm">
+                                    <input type="hidden" name="productId" value="@Model.Id" />
+                                <div class="e-btn cart-qtt btn-gradient">
+                                    <div class="e-quantity">
+
+                                        <input type="number" step="1" min="1" max="999" name="quantity" value="1" title="Qty" class="qty input-text js-number" size="4">
+                                        <div class="tc pa">
+                                            <a class="js-plus quantity-right-plus"><i class="fa fa-caret-up"></i></a>
+                                            <a class="js-minus quantity-left-minus"><i class="fa fa-caret-down"></i></a>
+                                        </div>
+                                    </div>
+                                    <a id="btnForm" class="btn-add-cart">Sepete ekle <span class="icon-bg icon-cart v2"></span></a>
+
+                                </div>
+                                </form>
+                                <a href="#" class="e-btn btn-icon">
+                                    <span class="icon-bg icon-wishlist"></span>
+                                </a>
+                                <a href="#" class="e-btn btn-icon">
+                                    <span class="icon-bg icon-compare"></span>
+                                </a>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("btnForm").addEventListener("click", function (e) {
+            e.preventDefault(); // <a> etiketi default davranışını engelle
+            document.getElementById("addToCartForm").submit(); // formu gönder
+        });
+    });
+</script>

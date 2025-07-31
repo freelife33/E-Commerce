@@ -8,14 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Pages\" />
+    <Folder Include="Views\Home\PartialViews\" />
+    <Folder Include="wwwroot\template\assets\sass\components\Mixins\" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ECommerce.Business\ECommerce.Business.csproj" />
     <ProjectReference Include="..\ECommerce.Data\ECommerce.Data.csproj" />
   </ItemGroup>
 

@@ -1,0 +1,166 @@
+﻿@using ECommerce.Web.Models;
+@model StoreIndexViewModel
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.css" rel="stylesheet" />
+<style>
+   #price-slider {
+    margin: 20px;
+    padding: 0;
+    height: 5px; 
+    box-sizing: border-box;
+}
+
+#price-slider .noUi-target {
+    height: 3px;
+    border: none;
+    background: #eee;
+    box-shadow: none;
+    top: 0;
+    margin: 0;
+}
+
+#price-slider .noUi-base {
+   
+    border-radius: 4px;
+}
+
+#price-slider .noUi-connect {
+    background: linear-gradient(to right, #c471f5, #00d4ff);
+    height: 100%;
+    top: 0;
+}
+
+#price-slider .noUi-handle {
+    top: -6px;
+    width: 18px;
+    height: 18px;
+    background: #fff;
+    border: 2px solid #000;
+    border-radius: 50%;
+    box-shadow: none;
+}
+
+#price-slider .noUi-handle:before,
+#price-slider .noUi-handle:after {
+    display: none;
+}
+
+    .btn-filter{
+        border-radius:35px;
+        border:none;
+    }
+
+</style>
+
+
+<div class="col-md-3 col-sm-3 col-xs-12 col-left collection-sidebar" id="filter-sidebar">
+    <div class="close-sidebar-collection hidden-lg hidden-md">
+        <span>filter</span><i class="icon_close ion-close"></i>
+    </div>
+    <div class="filter filter-cate">
+        <h3 class="widget-blog-title">Kategoriler</h3>
+        <ul class="wiget-content v2">
+            <li>
+                <a href="@Url.Action("Index", "Store")">
+                   Tüm Kategoriler <span class="number">(@Model.ProductCount)</span>
+                </a>
+            </li>
+            @foreach (var category in Model.Categories)
+            {
+                <li class="@(Model.SelectedCategoryId == category.Id ? "active" : "")">
+                    <a href="@Url.Action("Index", "Store", new { categoryId = category.Id })">
+                        @category.Name <span class="number">(@Model.Products.Where(p=>p.CategoryName==category.Name).Count())</span>
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="filter filter-group mb-5">
+        <form asp-action="Index" method="get" class="form-inline">
+            <div class="filter-group">
+                <h4 style="margin: 10px 15px 5px 15px;">Fiyat Aralığı</h4>
+
+                <div id="price-slider"></div>
+
+                <div id="price-labels" style="margin-left:25px; margin-bottom:20px">
+                    <span id="price-min">₺0</span>
+                    <span>-</span>
+                    <span id="price-max">₺50.000</span>
+                </div>
+
+                <input type="hidden" id="minPriceInput" name="minPrice" />
+                <input type="hidden" id="maxPriceInput" name="maxPrice" />
+                <div class="mt-30 text-center" style="margin-bottom:20px">
+                    <button id="filter-button" class="btn btn-filter e-gradient w-50">Filtrele</button>
+                </div>
+            </div>
+                       
+        </form>
+
+    </div>   
+    <div class="filter filter-product e-category">
+        <h3 class="widget-blog-title">Popüler Ürünler</h3>
+        <div class="owl-carousel owl-theme js-owl-post">
+            <div class="item">
+                @foreach (var product in Model.TopProducts)
+                {
+                    <div class="cate-item">
+                        <div class="product-img">
+                            <a href="#"><img src="@product.CoverImageUrl" alt="@product.Name" class="img-reponsive" /></a>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title"><a href="#">@product.Name</a></h3>
+                            <div class="product-price v2"><span>@product.Price.ToString("C")</span></div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.js"></script>
+
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var slider = document.getElementById('price-slider');
+
+            noUiSlider.create(slider, {
+                start: [0, 50000], // Başlangıç aralığı
+                connect: true,
+                step: 1,
+                range: {
+                    'min': 0,
+                    'max': 50000
+                },
+                format: {
+                    to: function (value) {
+                        return Math.round(value);
+                    },
+                    from: function (value) {
+                        return Number(value);
+                    }
+                }
+            });
+
+            var minSpan = document.getElementById('price-min');
+            var maxSpan = document.getElementById('price-max');
+            var minInput = document.getElementById('minPriceInput');
+            var maxInput = document.getElementById('maxPriceInput');
+
+            slider.noUiSlider.on('update', function (values, handle) {
+                minSpan.textContent = '₺' + values[0];
+                maxSpan.textContent = '₺' + values[1];
+                minInput.value = values[0];
+                maxInput.value = values[1];
+            });
+        });
+    </script>
+
+
+

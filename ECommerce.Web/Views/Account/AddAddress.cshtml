@@ -1,0 +1,59 @@
+﻿@{
+    ViewData["Title"] = "AddAddress";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using ECommerce.Web.Models.Address;
+@model AddressViewModel
+
+
+<div class="container container-240">
+    <div class="myaccount">
+        <div class="row flex pd">
+            <div class="account-element bd-7" style="margin:auto">
+                <div class="cmt-title text-center abs">
+                    <h1 class="page-title v1">Yeni Adres</h1>
+                </div>
+                <div class="page-content">
+                    <form asp-action="AddAddress" method="post">
+                        <div class="form-group">
+                            <label asp-for="Title"></label>
+                            <input asp-for="Title" class="form-control" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="FullAddress"></label>
+                            <textarea asp-for="FullAddress" class="form-control"></textarea>
+                            <span asp-validation-for="FullAddress" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="City"></label>
+                            <input asp-for="City" class="form-control" />
+                            <span asp-validation-for="City" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="District"></label>
+                            <input asp-for="District" class="form-control" />
+                            <span asp-validation-for="District" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="PhoneNumber"></label>
+                            <input asp-for="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Kaydet</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

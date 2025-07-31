@@ -1,0 +1,33 @@
+﻿@using ECommerce.DTOs.Cart
+@model List<CartItemDto>
+
+<ul class="mini-products-list">
+    @foreach (var item in Model)
+    {
+        <li class="item-cart">
+            <div class="product-img-wrap">
+                <a href="#"><img src="@item.ImageUrl" alt="@item.ProductName" class="img-reponsive"></a>
+            </div>
+            <div class="product-details">
+                <div class="inner-left">
+                    <div class="product-name"><a href="#">@item.ProductName</a></div>
+                    <div class="product-price">
+                        @item.Price.ToString("C2") <span>( x@item.Quantity)</span>
+                    </div>
+                </div>
+            </div>
+            <a href="@Url.Action("Remove", "Cart", new { productId = item.ProductId })" class="e-del"><i class="ion-ios-close-empty"></i></a>
+        </li>
+    }
+</ul>
+
+<div class="bottom-cart">
+    <div class="cart-price">
+        <span>Ara Toplam</span>
+        <span class="price-total">@Model.Sum(x => x.Price * x.Quantity).ToString("C2")</span>
+    </div>
+    <div class="button-cart">
+        <a href="@Url.Action("Index", "Cart")" class="cart-btn btn-viewcart">Sepete Gir</a>
+        <a href="#" class="cart-btn e-checkout btn-gradient">Ödemeye Geç</a>
+    </div>
+</div>

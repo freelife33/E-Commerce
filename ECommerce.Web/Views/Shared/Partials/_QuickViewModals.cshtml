@@ -1,0 +1,23 @@
+﻿@using ECommerce.DTOs.Product
+@model List<ProductListDto>
+
+@foreach (var product in Model)
+{
+    <div class="modal fade" id="quickViewModal-@product.Id" tabindex="-1" aria-labelledby="modalLabel-@product.Id" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel-@product.Id">@product.Name</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                </div>
+                <div class="modal-body">
+
+                    adasda
+                    <img src="@product.CoverImageUrl" class="img-fluid" />
+                    <p>Fiyat: ₺@product.Price</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

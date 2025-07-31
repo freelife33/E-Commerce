@@ -14,7 +14,7 @@ namespace ECommerce.Data.Entities
         public int? UserId { get; set; }
 
         [ForeignKey("UserId")]
-        public User? User { get; set; }
+        public User User { get; set; }
         public string Status { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
         public Payment Payment { get; set; }
@@ -22,7 +22,15 @@ namespace ECommerce.Data.Entities
         public Shipment Shipment { get; set; }
         public ICollection<ReturnRequest> ReturnRequests { get; set; }
         public ICollection<Log> Logs { get; set; }
+        public int? AddressId { get; set; }
+        public Address Address { get; set; }
+        public int? CuponId { get; set; }
+        public Cupon Cupon { get; set; }
 
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal DiscountAmount { get; set; }
 
+        [NotMapped]
+        public decimal FinalTotal => TotalAmount - DiscountAmount;
     }
 }

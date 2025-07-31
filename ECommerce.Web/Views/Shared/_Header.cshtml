@@ -1,0 +1,155 @@
+﻿ <!-- push menu-->
+ <style>
+    .custom-search-input {
+        width: 75% !important;
+    }
+    .custom-dp{
+        max-height:50px;
+    }
+.header-center{
+    padding-bottom:20px;
+}
+
+ </style>
+<div class="pushmenu menu-home5">
+    <div class="menu-push">
+        <span class="close-left js-close"><i class="icon-close f-20"></i></span>
+        <div class="clearfix"></div>
+        <form class="searchform" asp-controller="Product" asp-action="List" method="get">
+            <div>
+                <label class="screen-reader-text" for="q"></label>
+                <input type="text" placeholder="Ara" value="" name="q" id="q" autocomplete="off"><input type="hidden" name="type" value="product"><button type="submit" id="searchsubmit"><i class="ion-ios-search-strong"></i></button>
+            </div>
+        </form>
+        <ul class="nav-home5 js-menubar">
+            <li class="level1 active dropdown">
+                <a href="#">Anasayfa</a>
+            </li>
+            <li class="level1 active dropdown">
+                <a href="#">Ürünler</a>
+            </li>
+            <li class="level1 active dropdown"><a href="#">İletişim</a></li>
+        </ul>
+    </div>
+</div>
+<!-- end push menu-->
+    <header id="header" class="header-v4">
+        <div class="header-top-banner">
+        <div class="container d-flex justify-content-between">
+            <div>
+                <small>Websitemize hoşgeldiniz.</small>
+            </div> 
+            <div>
+                <a href="/Account/Register"><i class="fa fa-user-plus"></i> Kaydol </a>
+            </div>
+        </div>
+        </div>
+       
+        <div class="header-center">
+            <div class="container container-240">
+                <div class="row flex">
+                    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6 v-center header-logo">
+
+                        <a href="#"><img src="" alt="" class="img-reponsive"></a>
+
+                    </div>
+                <div class="col-lg-6 col-md-6 v-center header-search hidden-xs hidden-sm">
+                    <form class="searchform ajax-search" asp-controller="Store" asp-action="Index" method="get">
+                        <div class="input-group" style="max-width: 600px;">
+                            <input type="text" class="form-control border-end-0 custom-search-input custom-dp" name="q" placeholder="Ürün ara" style="border-radius: 30px 0 0 30px;">
+                            <button class="btn btn-dark custom-dp" type="submit" style="border-radius: 0 30px 30px 0; height:60px">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+
+                <div class="col-lg-3  col-md-3 col-sm-6 col-xs-6 v-center header-sub">
+                    <div class="right-panel">
+                        <div class="header-sub-element hidden-xs hidden-sm">
+                           @*  <div class="sub-left">
+                                <img src="img/icon-call.png" alt="">
+                            </div> *@
+                          @*   <div class="sub-right">
+                                <span>Call Us Free</span>
+                                <div class="phone">(+123) 456 789 </div>
+                            </div> *@
+                        </div>
+                        <div class="header-sub-element d-flex gap-5" style="align-items:end">
+                            @* <a class="hidden-xs hidden-sm" href="" style="vertical-align:bottom;"><img src="~/img/icon-user.png" alt="" ></a> *@
+                            @if (User.Identity!.IsAuthenticated)
+                            {
+                                <form asp-action="Logout" asp-controller="Account" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-link p-0" title="Çıkış Yap" style="color: inherit; text-decoration:none">
+                                        <span class=""> Merhaba</span> <br />
+                                        <span class=""> @User.Identity.Name</span>
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <a asp-controller="Account" asp-action="Login" title="Giriş Yap" class="hidden-xs hidden-sm text-center">
+                                   <img src="~/img/icon-user.png" alt=""><br />
+                                 @*   <small>Giriş yap</small> *@
+                                </a>
+                            }
+                            <a asp-controller="Wishlist" asp-action="Index" class="position-relative d-inline-block">
+                                @if (ViewBag.WishlistCount > 0)
+                                {
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        @ViewBag.WishlistCount
+                                    </span>
+                                }
+                                <img src="~/img/icon-heart.png" alt="">
+                               
+                                </a>
+                           
+                            <div class="position-relative" style="align-items:end">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" id="label5" style="align-items:end">
+                                    <img src="~/img/icon-cart.png" alt="" style="padding-top:10px;">
+                                    <span class="count cart-count">@await Component.InvokeAsync("CartItemCount")</span>
+                                </a>
+
+                                @await Component.InvokeAsync("CartDropdown")
+                                
+                            </div>
+                            <a href="#" class="hidden-md hidden-lg icon-pushmenu js-push-menu">
+                                <i class="fa fa-bars f-15"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="header-bottom">
+            <div class="container container-240">
+
+                <div class="flex lr">
+                    <nav class="main-menu">
+                        <div class="collapse navbar-collapse" id="myNavbar">
+                        <ul class="nav navbar-nav js-menubar d-inline-block">
+                                <li class="level1 active hassub">
+                                    <a href="/Home">Anasayfa</a>
+                                </li>
+                                <li class="level1 dropdown hassub">
+                                    <a href="/Store">Ürünler</a>
+                                </li>
+                                <li class="level1 active dropdown">
+                                    <a href="#">İletişim</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                    <div class="header-bottom-right hidden-xs hidden-sm">
+                        <img src="" alt="" class="img-reponsive">
+                    <span>İstek üzeri özel ürün yapılır.</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+ </header>
+

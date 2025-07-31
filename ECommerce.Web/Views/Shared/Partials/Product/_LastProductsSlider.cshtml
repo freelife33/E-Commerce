@@ -1,0 +1,19 @@
+﻿@model List<ECommerce.DTOs.Product.ProductListDto>
+@using ECommerce.Web.Helpers;
+<div class="row">
+    <div class="offset-md-2 col-md-8">
+        <div class="owl-carousel owl-product-slider" id="slider">
+            @foreach (var product in Model.Take(5))
+            {
+                <a href="/Product/Detail/@product.Id">
+                    <div class="item">
+                        <img src="@PathHelper.ToImagePath(product.CoverImageUrl)" alt="@product.Name" class="img-fluid" />
+                        <h5>@product.Name</h5>
+                        <p>@product.Price.ToString("C")</p>
+                    </div>
+                </a>
+            }
+        </div>
+
+    </div>
+</div>

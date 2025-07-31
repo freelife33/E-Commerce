@@ -1,0 +1,22 @@
+﻿@model List<ECommerce.DTOs.Product.ProductListDto>
+@using ECommerce.Web.Helpers;
+
+
+<div class="container py-2">
+    <div class="owl-carousel owl-home-slider">
+        @foreach (var item in Model.Take(5))
+        {
+            <div class="item text-center">
+                <div class="position-relative">
+                    <a asp-controller="Product" asp-action="Detail" asp-route-id="@item.Id">
+                        <img src="@PathHelper.ToImagePath(item.CoverImageUrl)" class="img-fluid rounded shadow" style="max-height: 450px; object-fit: cover;" alt="@item.Name">
+                    </a>
+                    <div class="position-absolute bottom-0 start-0 bg-dark bg-opacity-50 text-white w-100 p-2">
+                        <h5 class="mb-1">@item.Name</h5>
+                        <small>@item.Price.ToString("C2")</small>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

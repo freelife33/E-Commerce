@@ -1,5 +1,8 @@
-﻿using ECommerce.Data.Entities;
+﻿using ECommerce.Business.Services;
+using ECommerce.Data.Entities;
 using ECommerce.Data.Repositories.Interfaces;
+using ECommerce.DTOs.Product;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -10,24 +13,46 @@ namespace ECommerce.Api.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IProductService _productService;
 
-        public ProductsController(IUnitOfWork unitOfWork)
+        public ProductsController(IProductService productService)
         {
-            _unitOfWork = unitOfWork;
+            _productService = productService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetProducts()
+        // Kullanıcı tarafı
+        [HttpGet("active")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetActiveProducts([FromQuery] ProductFilterDto filterDto)
         {
-            var products = await _unitOfWork.Products.GetAllAsync();
+            var products = await _productService.GetActiveProductsAsync(filterDto);
+            return Ok(products);
+        }
+
+        [HttpGet("active/{id}")]
+        public async Task<IActionResult> GetProductDetail(int id)
+        {
+            var product = await _productService.GetProductDetailAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return Ok(product);
+        }
+
+        // Admin tarafı
+
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllProducts([FromQuery] ProductFilterDto filterDto)
+        {
+            var products = await _productService.GetAllProductsAsync(filterDto);
             return Ok(products);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetProduct(int id)
+        public async Task<IActionResult> GetProductById(int id)
         {
-            var product = await _unitOfWork?.Products?.GetByIdAsync(id)!;
+            var product = await _productService.GetProductByIdAsync(id);
             if (product == null)
             {
                 return NotFound();
@@ -36,36 +61,34 @@ namespace ECommerce.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProduct(Product product)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> CreateProduct([FromBody] CreateProductDto dto)
         {
-            await _unitOfWork.Products.AddAsync(product);
-            await _unitOfWork.ComplateAsync();
-            return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _productService.CreateProductAsync(dto);
+            return result ? Ok("Ürün başarıyla eklendi.") : BadRequest("Ürün eklenemedi.");
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct(int id, Product product)
+        [HttpPut]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductDto dto)
         {
-            if (id != product.Id)
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
-            _unitOfWork.Products.Update(product);
-            await _unitOfWork.ComplateAsync();
-            return NoContent();
+            var result = await _productService.UpdateProductAsync(dto);
+            return result ? Ok("Ürün başarıyla güncellendi.") : BadRequest("Ürün güncellenemedi.");
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            var product = await _unitOfWork.Products.GetByIdAsync(id)!;
-            if (product == null)
-            {
-                return NotFound();
-            }
-            _unitOfWork.Products.Remove(product);
-            await _unitOfWork.ComplateAsync();
-            return NoContent();
+            var result = await _productService.DeleteProductAsync(id);
+            return result ? Ok("Ürün başarıyla silindi.") : BadRequest("Ürün silinemedi.");
         }
     }
 }

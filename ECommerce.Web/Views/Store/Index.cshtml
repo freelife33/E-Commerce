@@ -1,0 +1,111 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using ECommerce.Web.Models;
+@model StoreIndexViewModel
+<div class="wrappage">
+
+    <div class="container container-240 shop-collection">
+        <ul class="breadcrumb">
+            <li><a href="@Url.Action("Index", "Home")">Anasayfa</a></li>
+            <li class="active">Ürünler</li>
+        </ul>
+        <div class="filter-collection-left hidden-lg hidden-md">
+            <a class="btn">Filter</a>
+        </div>
+        <div class="row shop-colect">
+
+                <partial name="~/Views/Shared/Partials/Store/_ProductSidebar.cshtml" model="Model" />
+
+            <div class="col-md-9 col-sm-12 col-xs-12 collection-list">
+                <div class="e-product">
+                    <div class="pd-banner">
+                        <a href="#" class="image-bd effect_img2">
+                            <img src="/img/shop-banner_3.jpg" alt="Shop Banner" class="img-reponsive" />
+                        </a>
+                    </div>
+
+                    <div class="pd-top">
+                        <h1 class="title">@Model.PageTitle</h1>
+                        <div class="show-element"><span> <span>@Model.ProductCount ürün gösteriliyor</span></span></div>
+                    </div>
+                    <div class="pd-middle">
+                        <div class="view-mode view-group">
+                            <a class="grid-icon col active"><img src="img/grid.png" alt=""></a>
+                            <a class="grid-icon col2"><img src="img/grid2.png" alt=""></a>
+                            <a class="list-icon list"><img src="img/list.png" alt=""></a>
+                        </div>
+                        <div class="pd-sort">
+                            <div class="filter-sort">
+                                <form asp-action="Index" method="get" class="form-inline">
+                                    <input type="hidden" name="q" value="@Model.SearchQuery" />
+                                    <input type="hidden" name="categoryId" value="@Model.SelectedCategoryId" />
+                                    <input type="hidden" name="page" value="@Model.PageNumber" />
+
+                                    <select name="sortBy" class="form-control me-2">
+                                        <option value="CreateDate" selected="@((Model.SortBy == "CreateDate") ? "selected" : null)">En Yeniler</option>
+                                        <option value="Price" selected="@((Model.SortBy == "Price" && !Model.SortDescending) ? "selected" : null)">Fiyat: Artan</option>
+                                        <option value="Price" selected="@((Model.SortBy == "Price" && Model.SortDescending) ? "selected" : null)">Fiyat: Azalan</option>
+                                        <option value="Name" selected="@((Model.SortBy == "Name" && !Model.SortDescending) ? "selected" : null)">A'dan Z'ye</option>
+                                        <option value="Name" selected="@((Model.SortBy == "Name" && Model.SortDescending) ? "selected" : null)">Z'den A'ya</option>
+                                    </select>
+
+                                    <select name="sortDesc" class="form-control">
+                                        <option value="false" selected="@(Model.SortDescending == false ? "selected" : null)">Artan</option>
+                                        <option value="true" selected="@(Model.SortDescending == true ? "selected" : null)">Azalan</option>
+                                    </select>
+
+                                    <button type="submit" class="btn btn-dark ms-2">Sırala</button>
+                                </form>
+
+
+                            </div>
+                           @*  <div class="filter-show">
+                                <div class="dropdown">
+                                    <button class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                        Show
+                                        <span class="dropdown-label">12</span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#">12</a></li>
+                                        <li><a href="#">24</a></li>
+                                        <li><a href="#">36</a></li>
+                                        <li><a href="#">48</a></li>
+                                    </ul>
+                                </div>
+                            </div> *@
+                        </div>
+                    </div>
+                       
+
+
+
+                    <div class="product-collection-grid product-grid">
+                        <div class="row">
+                            <partial name="~/Views/Shared/Partials/Store/_ProductList.cshtml" model="Model.Products" />
+                        </div>
+                    </div>
+                  
+                        @if (Model.TotalPages > 1)
+                        {
+                            <nav aria-label="Sayfalama">
+                                <ul class="pagination">
+                                    @for (int i = 1; i <= Model.TotalPages; i++)
+                                    {
+                                        <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                                            <a class="page-link" href="@Url.Action("Index", "Store", new { page = i, categoryId = Model.SelectedCategoryId, q = Model.SearchQuery })">@i</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </nav>
+                        }
+
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+

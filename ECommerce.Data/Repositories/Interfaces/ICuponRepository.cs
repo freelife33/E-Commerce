@@ -9,5 +9,6 @@ namespace ECommerce.Data.Repositories.Interfaces
 {
     public  interface ICuponRepository : IRepository<Cupon>
     {
+        Task<Cupon> GetByCodeAsync(string code);
     }
 }

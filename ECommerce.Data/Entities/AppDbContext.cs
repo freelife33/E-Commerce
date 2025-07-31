@@ -33,7 +33,7 @@ namespace ECommerce.Data.Entities
             modelBuilder.Entity<UserRole>()
            .HasKey(ur => new { ur.UserId, ur.RoleId });
 
-           
+
             modelBuilder.Entity<UserRole>()
                 .HasOne(ur => ur.User)
                 .WithMany(u => u.UserRoles)
@@ -44,7 +44,7 @@ namespace ECommerce.Data.Entities
                 .WithMany(r => r.UserRoles)
                 .HasForeignKey(ur => ur.RoleId);
 
-
+           
 
         }
         public DbSet<Product> Products { get; set; }//24
@@ -74,6 +74,11 @@ namespace ECommerce.Data.Entities
         public DbSet<Bid> Bids { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<Stock> Stocks { get; set; }
+        public DbSet<CustomOrderRequest> CustomOrderRequests { get; set; }
+        public DbSet<Address> Address { get; set; }
+        public DbSet<BankAccount> BankAccounts { get; set; }
+        public DbSet<PaymentMethod> PaymentMethods { get; set; }
+
 
 
     }

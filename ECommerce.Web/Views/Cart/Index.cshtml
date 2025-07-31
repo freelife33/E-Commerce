@@ -1,0 +1,191 @@
+﻿@using ECommerce.DTOs.Cart
+@using ECommerce.Web.Helpers
+@model List<CartItemDto>
+
+@{
+    ViewData["Title"] = "Sepetim";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    decimal total = Model.Sum(x => x.Price * x.Quantity);
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<style>
+
+    .adet-c{
+        width:65px;
+        height:30px;
+        border-radius:999px;
+        border: 0.5px solid gray;
+        padding-left:20px;
+    }
+</style>
+
+<div class="container container-240">
+
+    <div class="checkout">
+        <ul class="breadcrumb v3">
+            <li><a href="/Store">Anasayfa</a></li>
+            <li class="active">Sepet</li>
+        </ul>
+        <div class="row">
+            <div class="col-md-8 col-sm-12 col-xs-12">
+                <div class="shopping-cart bd-7">
+                    <div class="cmt-title text-center abs">
+                        <h1 class="page-title v2">Sepet</h1>
+                    </div>
+                    @if (!Model.Any())
+                    {
+                        <div style="margin:20px">  
+                        <div class="alert alert-warning m-10">Sepetinizde ürün bulunmamaktadır.</div>
+                        <a asp-controller="Store" asp-action="Index" class="btn btn-update btn-success">Alışverişe Devam Et</a>
+                    </div>
+                    }
+                    else
+                    {
+                        
+                        <div class="table-responsive">
+                            <table class="table cart-table">
+
+                                <tbody>
+
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr class="item_cart">
+                                            <td class="product-name flex align-center">
+                                                <a href="@Url.Action("Remove", "Cart", new { productId = item.ProductId })" class="btn-del"><i class="ion-ios-close-empty"></i></a>
+                                                <div class="product-img">
+                                                    <img src="@PathHelper.ToImagePath(item.ImageUrl)" alt="@item.ProductName">
+                                                </div>
+                                                <div class="product-info">
+                                                    <a href="#" title="">@item.ProductName </a>
+                                                </div>
+                                            </td>
+
+                                            <td class="bcart-quantity single-product-detail">
+                                                <div class="single-product-info">
+                                                     <form method="post" asp-action="UpdateQuantity" class="cart-qty-form">
+                                                         <input type="hidden" name="productId" value="@item.ProductId" />
+                                                    <div class="e-quantity-1">
+                                                        <input type="number" step="1" min="1" max="999" name="quantity"  value="@item.Quantity" title="Qty" class="adet-c qty input-text js-number" size="10">                                                      
+                                                    </div>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                            <td class="total-price">
+                                                <p class="price">@((item.Price * item.Quantity).ToString("C2"))</p>
+                                            </td>
+                                        </tr>
+
+                                    }
+
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="table-cart-bottom">
+
+                            <form class="form_coupon" action="#" method="post">
+                                <input type="email" value="" placeholder="Kupon kodunu girin" name="EMAIL" id="mail" class="newsletter-input form-control">
+                                <div class="input-icon">
+                                    <img src="img/coupon-icon.png" alt="">
+                                </div>
+                                <button id="subscribe2" class="button_mini btn" type="submit">
+                                    Kuponu Uygula
+                                </button>
+                            </form>
+                            <a asp-controller="Store" asp-action="Index" class="btn btn-update btn-success">Alışverişe Devam Et</a>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12 col-xs-12">
+                <div class="cart-total bd-7">
+                    <div class="cmt-title text-center abs">
+                        <h1 class="page-title v3">Sepet Toplamı</h1>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="shop_table">
+                            <tbody>
+                                <tr class="cart-subtotal">
+                                    <th>Ara Toplam</th>
+                                    <td>@total.ToString("C2")</td>
+                                </tr>
+                                <tr class="cart-shipping">
+                                    <th>Kargo</th>
+                                    <td class="td">
+                                        @* <ul class="shipping">
+                                            <li>
+                                                <input type="radio" name="gender" value="Flat" id="radio1" checked="checked">
+                                                <label for="radio1">Flat rate : $ 12</label>
+                                            </li>
+                                            <li>
+                                                <input type="radio" name="gender" value="Free" id="radio2">
+                                                <label for="radio2">Free Shipping</label>
+                                            </li>
+                                        </ul>
+                                        <a href="#" class="calcu">Calculate shipping</a> *@
+                                    </td>
+                                </tr>
+                                <tr class="order-total">
+                                    <th>Toplam</th>
+                                    <td>@total.ToString("C2")</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="cart-total-bottom">
+                        <a href="/Order/Checkout" class="btn-gradient btn-checkout">Satın Al</a>
+                    </div>
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+@section Scripts {
+           
+     <script>
+
+        document.querySelectorAll('.js-number').forEach(input => {
+            input.addEventListener('change', function () {
+                let val = parseInt(input.value);
+                 const max = parseInt(input.getAttribute('max')) || 999;
+                 if (isNaN(val) || val < 1) val = 1;
+                 else if (val > max) val = max;
+
+                 input.value = val;
+
+                const form = input.closest('form');
+                if (form) form.submit();
+            });
+        });
+    </script>
+
+    @if (TempData["StockWarning"] != null)
+    {
+        <script>
+            Swal.fire({
+                icon: 'warning',
+                title: 'Stok Uyarısı',
+                text: @Html.Raw(Json.Serialize(TempData["StockWarning"])),
+                confirmButtonText: 'Tamam'
+            });
+        </script>
+    }
+}

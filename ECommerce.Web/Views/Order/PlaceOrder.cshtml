@@ -1,0 +1,77 @@
+﻿@{
+    ViewData["Title"] = "Siparişi Onayla";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using ECommerce.Web.Models.Order;
+@model PlaceOrderViewModel
+<div class="container container-240">
+    <div class="card p-3">
+        <div class="row flex pd">
+            <div class="col-md-10" style="margin:auto">
+                <div class="cmt-title text-center abs">
+                    <h1 class="page-title v1">Siparişi Onayla</h1>
+                </div>
+                <div class="page-content">
+                    
+
+
+                    <h4>Teslimat Adresi</h4>
+                    <div>
+                        <strong>@Model.Address!.FullAddress</strong><br />
+                        @Model.Address.AddressLine<br />
+                        @Model.Address.City, @Model.Address.District<br />
+                        @Model.Address.PhoneNumber
+                    </div>
+
+                    <hr />
+
+                    <h4>Sepet Özeti</h4>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Ürün</th>
+                                <th>Birim Fiyat</th>
+                                <th>Adet</th>
+                                <th>Ara Toplam</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.CartItems!)
+                            {
+                                <tr>
+                                    <td>@item.ProductName</td>
+                                    <td>₺@((item.DiscountedPrice ?? item.Price).ToString("0.00"))</td>
+                                    <td>@item.Quantity</td>
+                                    <td>₺@((item.Quantity * (item.DiscountedPrice ?? item.Price)).ToString("0.00"))</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <hr />
+
+                    <div class="d-flex justify-content-end">
+                        <div>
+                            @if (Model.Discount > 0)
+                            {
+                                <p>İndirim: <strong>-₺@Model.Discount)</strong></p>
+                            }
+                            <p><strong>Toplam Tutar: ₺@Model.SubTotal.ToString("0.00")</strong></p>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <form asp-action="PlaceOrder" method="post">
+                        <input type="hidden" name="AddressId" value="Model.AddressId" />
+                        <input type="hidden" name="" value="Model.AddressId" />
+                        <input type="hidden" name="CuponId" value="Model.CuponId" />
+                        <button type="submit" class="btn btn-success">Siparişi Tamamla</button>
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

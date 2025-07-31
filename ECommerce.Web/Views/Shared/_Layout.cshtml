@@ -1,49 +1,72 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@using ECommerce.DTOs.Product
+<!DOCTYPE html>
+<html lang="tr">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - ECommerce.Web</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/ECommerce.Web.styles.css" asp-append-version="true" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - webADGL</title>
+
+    <link rel="stylesheet" href="~/template/assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/template/assets/css/font-awesome.min.css" /> 
+    <link rel="stylesheet" href="~/template/assets/css/style.css" />
+    <link rel="stylesheet" href="~/template/assets/css/owl.carousel.min.css" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
+    <link href="~/template/assets/css/owl.theme.default.min.css" rel="stylesheet" />
+    <link href="~/template/assets/css/slick.css" rel="stylesheet" />
+    <link href="~/template/assets/css/slick-theme.css" rel="stylesheet" />
+    <a href="~/template/assets/css/bootstrap-slider.css.map"></a>
+    <link href="~/template/assets/css/bootstrap-slider.css" rel="stylesheet" />
+    <!-- HEAD içine -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+
+    @RenderSection("Styles", required: false)
+
+    
+
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ECommerce.Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - ECommerce.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    <!-- Header -->
+    @await Html.PartialAsync("_Header")
+
+    <!-- Ana İçerik -->
+    <main role="main" class="">
+        @RenderBody()
+    </main>
+
+    @{
+        var modalProducts = ViewBag.Products as List<ProductListDto>;
+    }
+
+   @*  @if (modalProducts != null)
+    {
+        @await Html.PartialAsync("_QuickViewModals", modalProducts)
+    }
+ *@
+
+    <!-- Footer -->
+    @await Html.PartialAsync("_Footer")
+
+
+   
+
+
+
+    <!-- JS -->
+    <script src="~/template/assets/js/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <script src="~/template/assets/js/bootstrap.js"></script> 
+    <script src="~/template/assets/js/owl.carousel.min.js"></script>
+    <script src="~/template/assets/js/bootstrap.bundle.min.js"></script>
+   <script src="~/template/assets/js/slick.min.js"></script>
+    <script src="~/template/assets/js/main.js"></script>
+    <script src="~/template/assets/js/bootstrap-slider.min.js"></script>
+    <!-- Scripts en sonuna -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

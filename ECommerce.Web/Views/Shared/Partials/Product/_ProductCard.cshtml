@@ -1,0 +1,84 @@
+﻿@using ECommerce.DTOs.Product
+@model ProductListDto
+@* <div class="card h-100 product-card">
+    <img src="@Model.CoverImageUrl" class="card-img-top" alt="@Model.Name" />
+    <div class="card-body text-center">
+        <h5 class="card-title">@Model.Name</h5>
+        <p class="card-text text-success fw-bold">@Model.Price.ToString("C0")</p>
+        <button class="btn btn-outline-danger btn-sm"><i class="fa fa-heart"></i></button>
+        <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#quickViewModal-@Model.Id">
+            <i class="fa fa-eye"></i>
+        </button>
+    </div>
+</div>
+ *@
+
+<div class="product-item">
+    <div class="pd-bd product-inner">
+        <div class="product-img">
+            <a href="/Product/Detail/@Model.Id"><img src="@Model.CoverImageUrl" alt="@Model.Name" class="img-reponsive"></a>
+        </div>
+        <div class="product-info">
+            <div class="color-group">
+            </div>
+           @*  <div class="element-list element-list-left">
+                <ul class="desc-list">
+                    <li>Connects directly to Bluetooth</li>
+                    <li>Battery Indicator light</li>
+                    <li>DPI Selection:2600/2000/1600/1200/800</li>
+                    <li>Computers running Windows</li>
+                </ul>
+            </div> *@
+            <div class="element-list element-list-middle">
+                @* <div class="product-rating bd-rating">
+                    <span class="star star-5"></span>
+                    <span class="star star-4"></span>
+                    <span class="star star-3"></span>
+                    <span class="star star-2"></span>
+                    <span class="star star-1"></span>
+                    <div class="number-rating">( 896 reviews )</div>
+                </div> *@
+                <p class="product-cate">@Model.CategoryName</p>
+                <h3 class="product-title"><a href="/Product/Detail/@Model.Id">@Model.Name</a></h3>
+                <div class="product-bottom">
+                    <div class="product-price"><span>@Model.Price.ToString("C2")</span></div>
+                    <a href="/Product/Detail/@Model.Id" class="btn-icon btn-view">
+                        <span class="icon-bg icon-view"></span>
+                    </a>
+                </div>
+                <div class="product-bottom-group">
+                    <form asp-controller="Cart" asp-action="Add" method="post">
+                        <input type="hidden" name="productId" value="@Model.Id" />
+                        <input type="hidden" name="quantity" value="1" />
+                        <button type="submit" class="btn btn-link p-0 btn-icon" title="Sepete Ekle">
+                            <span class="icon-bg icon-cart"></span>
+                        </button>
+                    </form>
+                    <form asp-controller="Wishlist" asp-action="Add" method="post">
+                        <input type="hidden" name="productId" value="@Model.Id" />
+                        <button class="btn btn-link p-0 btn-icon"> <span class="icon-bg icon-wishlist"></span></button>
+                    </form>
+                    <a href="#" class="btn-icon">
+                        <span class="icon-bg icon-compare"></span>
+                    </a>
+                </div>
+            </div>
+            <div class="product-button-group">
+                <form asp-controller="Cart" asp-action="Add" method="post">
+                    <input type="hidden" name="productId" value="@Model.Id" />
+                    <input type="hidden" name="quantity" value="1" />
+                    <button type="submit" class="btn btn-link p-0 btn-icon" title="Sepete Ekle">
+                        <span class="icon-bg icon-cart"></span>
+                    </button>
+                </form>
+                <form asp-controller="Wishlist" asp-action="Add" method="post">
+                    <input type="hidden" name="productId" value="@Model.Id" />
+                    <button class="btn btn-link p-0 btn-icon"> <span class="icon-bg icon-wishlist"></span></button>
+                </form>
+                <a href="#" class="btn-icon">
+                    <span class="icon-bg icon-compare"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

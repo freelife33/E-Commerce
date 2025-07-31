@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Addresses";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using ECommerce.Web.Models.Address;
+@model List<AddressViewModel>
+
+
+<div class="container container-240">
+    <div class="myaccount">
+        <div class="row flex pd">
+            <div class="account-element bd-7" style="margin:auto">
+                <div class="cmt-title text-center abs">
+                    <h1 class="page-title v1">Adreslerim</h1>
+                </div>
+                <div class="page-content">
+                     
+                    <a asp-action="AddAddress" class="btn btn-success mb-3">Yeni Adres Ekle</a>
+
+                    @if (!Model.Any())
+                    {
+                        <div class="alert alert-info">Henüz kayıtlı bir adresiniz yok.</div>
+                    }
+                    else
+                    {
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Başlık</th>
+                                    <th>Adres</th>
+                                    <th>Şehir / İlçe</th>
+                                    <th>Telefon</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var address in Model)
+                                {
+                                    <tr>
+                                        <td>@address.Title</td>
+                                        <td>@address.FullAddress</td>
+                                        <td>@address.City / @address.District</td>
+                                        <td>@address.PhoneNumber</td>
+                                        <td>
+                                            <a asp-action="EditAddress" asp-route-id="@address.Id" class="btn btn-sm btn-primary">Düzenle</a>
+                                            @* Silme istersen buraya da buton ekleyebiliriz *@
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

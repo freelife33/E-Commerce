@@ -1,0 +1,95 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+@using ECommerce.DTOs.Product
+@model ProductDetailDto
+@{
+    ViewData["Title"] = "Ürün Detayı";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">@Model.Name</h4>
+                <a asp-action="Index" class="btn btn-sm btn-secondary">← Geri Dön</a>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-2">Fiyat</dt>
+                    <dd class="col-sm-10">@Model.Price.ToString("C")</dd>
+
+                    <dt class="col-sm-2">Stok</dt>
+                    <dd class="col-sm-10">@Model.Stock</dd>
+
+                    <dt class="col-sm-2">Kategori</dt>
+                    <dd class="col-sm-10">@Model.CategoryName</dd>
+
+                    <dt class="col-sm-2">Açıklama</dt>
+                    <dd class="col-sm-10">@Model.Description</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ürün Resimleri -->
+    <div class="col-lg-12 mt-4">
+        <h5>Ürün Resimleri</h5>
+        <div class="row g-3">
+            @foreach (var image in Model.Images)
+            {
+                <div class="col-md-3">
+                    <div class="card border @((image.IsCover ? "border-success" : ""))">
+                        <img src="/@image.ImageUrl" class="card-img-top" style="height: 200px; object-fit: cover;" />
+                        <div class="card-body text-center">
+                            @if (image.IsCover)
+                            {
+                                <span class="badge bg-success mb-2">Kapak</span>
+                            }
+                            <div class="d-flex justify-content-center gap-2">
+                                <button class="btn btn-sm btn-outline-primary" onclick="setCover(@image.Id, @Model.Id)">Kapak Yap</button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteImage(@image.Id)">Sil</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Resim Ekleme -->
+    <div class="col-lg-6 mt-5">
+        <div class="card">
+            <div class="card-header bg-light">
+                <strong>Yeni Resim Ekle</strong>
+            </div>
+            <div class="card-body">
+                <form asp-action="UploadImage" asp-controller="Admin" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="productId" value="@Model.Id" />
+                    <div class="mb-3">
+                        <input class="form-control" type="file" name="image" required />
+                    </div>
+                    <button type="submit" class="btn btn-success">Resmi Yükle</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function deleteImage(id) {
+            if (!confirm("Resmi silmek istiyor musunuz?")) return;
+            fetch(`/api/ProductImage/${id}`, { method: "DELETE" })
+                .then(res => res.ok ? location.reload() : alert("Silinemedi."));
+        }
+
+                function setCover(imageId, productId) {
+            fetch(`/Product/MakeCover?imageId=${imageId}&productId=${productId}`, {
+                method: "POST"
+            })
+            .then(res => res.ok ? location.reload() : alert("Kapak yapılamadı."));
+        }
+    </script>
+}
+

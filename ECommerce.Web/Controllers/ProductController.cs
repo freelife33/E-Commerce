@@ -1,114 +1,61 @@
-﻿using ECommerce.Data.Entities;
-using ECommerce.Data.Repositories.Interfaces;
+﻿using AutoMapper;
+using ECommerce.Business.Services;
+using ECommerce.DTOs.Product;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ECommerce.Web.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
 
-        public ProductController(IUnitOfWork unitOfWork)
+        private readonly IProductService _productService;
+        private readonly IProductImageService _productImageService;
+        private readonly ICategoryService _categoryService;
+        private readonly IMapper _mapper;
+
+        public ProductController(IProductService productService, IProductImageService productImageService, ICategoryService categoryService, IMapper mapper)
         {
-            _unitOfWork = unitOfWork;
+            _productService = productService;
+            _productImageService = productImageService;
+            _categoryService = categoryService;
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
         {
-            var products =await _unitOfWork.Products.GetAllAsync();
-            return View(products.Where(c=>c.IsDeleted==false).ToList());
+            var products = await _productService.GetAllProductsAsync(new ProductFilterDto
+            {
+                IsActive = true,
+                PageSize = 5,
+                SortBy = "CreatedDate", // varsa tarih alanı
+                SortDescending = true
+            });
+
+            return View(products);
         }
 
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> List(string? search)
         {
-            var product = await _unitOfWork.Products.GetByIdAsync(id)!;
-            if (product == null)
+            var filter = new ProductFilterDto
             {
+                Search = search,
+                ShowDeleted = false,
+                IsActive = true
+            };
+
+            var products = await _productService.GetAllProductsAsync(filter);
+            return View(products);
+        }
+
+
+        public async Task<IActionResult> Detail(int id)
+        {
+            var product = await _productService.GetProductByIdAsync(id);
+
+            if (product == null || !product.IsActive)
                 return NotFound();
-            }
+
             return View(product);
-        }
-
-        public async Task<IActionResult> Create()
-        {
-            var categories = await _unitOfWork.Categories.GetAllAsync();
-            ViewBag.Categories = new SelectList(categories, "Id", "Name");
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Product product)
-        {
-            if (ModelState.IsValid)
-            {
-                await _unitOfWork.Products.AddAsync(product);
-                await _unitOfWork.ComplateAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            var categories = await _unitOfWork.Categories.GetAllAsync();
-            ViewBag.Categories = new SelectList(categories, "Id", "Name");
-            return View(product);
-        }
-
-        public async Task<IActionResult> Edit(int id)
-        {
-            var product = await _unitOfWork.Products.GetByIdAsync(id)!;
-            if (product == null)
-            {
-                return NotFound();
-            }
-            var categories = await _unitOfWork.Categories.GetAllAsync();
-            ViewBag.Categories = new SelectList(categories, "Id", "Name");
-            return View(product);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Product product)
-        {
-            if (id != product.Id)
-            {
-                return NotFound();
-            }
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _unitOfWork.Products.Update(product);
-                    await _unitOfWork.ComplateAsync();
-                }
-                catch (Exception ex)
-                {
-                   return NotFound(ex.Message);
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            var categories = await _unitOfWork.Categories.GetAllAsync();
-            ViewBag.Categories = new SelectList(categories, "Id", "Name");
-            return View(product);
-        }
-
-        public async Task<IActionResult> Delete(int id)
-        {
-            var product = await _unitOfWork.Products.GetByIdAsync(id)!;
-            if (product == null)
-            {
-                return NotFound();
-            }
-            return View(product);
-        }
-
-        [HttpPost("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var product = await _unitOfWork.Products.GetByIdAsync(id)!;
-            //_unitOfWork.Products.Remove(product!);
-            product!.IsDeleted = true;
-            await _unitOfWork.ComplateAsync();
-            return RedirectToAction(nameof(Index));
         }
     }
 }

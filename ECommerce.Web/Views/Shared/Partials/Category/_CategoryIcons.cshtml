@@ -1,0 +1,13 @@
+﻿@using ECommerce.DTOs.Category
+@model List<CategoryListDto>
+
+<div class="header-cate e-gradient hidden-xs hidden-sm">
+    <ul>      
+         @foreach (var category in Model)
+        {
+        <li>
+            <a href="#"><img src="" alt="">@category.Name</a>
+        </li>
+        }
+    </ul>
+</div>

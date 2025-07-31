@@ -7,6 +7,11 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Data.Entities
 {
+    public enum DiscountType
+    {
+        Percentage, // %
+        FixedAmount // TL
+    }
     public class Cupon
     {
         public int Id { get; set; }
@@ -14,7 +19,8 @@ namespace ECommerce.Data.Entities
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal DiscountAmount { get; set; }
-        public string DiscountType { get; set; }
+
+        public DiscountType DiscountType { get; set; }
         public DateTime ExpiryDate { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]

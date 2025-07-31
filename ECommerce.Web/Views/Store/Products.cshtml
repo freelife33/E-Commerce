@@ -1,0 +1,27 @@
+﻿@using ECommerce.Web.Models
+@model StoreProductsViewModel
+
+<div class="container container-240 shop-collection">
+    <ul class="breadcrumb">
+        <li><a href="/">Home</a></li>
+        <li class="active">Shop</li>
+    </ul>
+    <div class="row shop-colect">
+        @Html.Partial("_ProductSidebar")
+        <div class="col-md-9 col-sm-12 col-xs-12 collection-list">
+            <div class="e-product">
+                <div class="pd-banner">
+                    <a href="#" class="image-bd effect_img2"><img src="img/shop-banner_3.jpg" class="img-reponsive" /></a>
+                </div>
+                <div class="pd-top">
+                    <h1 class="title">Shop</h1>
+                    <div class="show-element"><span>Showing @Model.Products.Count() results</span></div>
+                </div>
+
+                @Html.Partial("_SortAndPerPage", Model)
+                @Html.Partial("_ProductList", Model)
+                @Html.Partial("_Pagination", Model)
+            </div>
+        </div>
+    </div>
+</div>

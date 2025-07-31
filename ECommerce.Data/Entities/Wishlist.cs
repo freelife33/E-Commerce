@@ -13,5 +13,6 @@ namespace ECommerce.Data.Entities
         public int UserId { get; set; }
         public User User { get; set; }
         public ICollection<WishlistItem> WishlistItems { get; set; } = new List<WishlistItem>();
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 }

@@ -1,0 +1,37 @@
+﻿
+@{
+    ViewData["Title"] = "MyOrders";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using ECommerce.Web.Models.Order;
+@model List<OrderSummaryViewModel>
+
+<h2>Siparişlerim</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tarih</th>
+            <th>Tutar</th>
+            <th>İndirim</th>
+            <th>Durum</th>
+            <th>Adres</th>
+            <th>Kupon</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.OrderId</td>
+                <td>@order.OrderDate.ToShortDateString()</td>
+                <td>@order.TotalAmount ₺</td>
+                <td>@order.DiscountAmount ₺</td>
+                <td>@order.Status</td>
+                <td>@order.AddressSummary</td>
+                <td>@(order.CuponCode ?? "-")</td>
+            </tr>
+        }
+    </tbody>
+</table>

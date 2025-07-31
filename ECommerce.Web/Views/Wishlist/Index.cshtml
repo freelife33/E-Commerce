@@ -1,0 +1,69 @@
+﻿@using ECommerce.Data.Entities
+@using ECommerce.Web.Helpers
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model List<WishlistItem>
+
+
+<div class="container container-240">
+    <div class="checkout wishlist">
+        <ul class="breadcrumb v3">
+            <li><a href="/Product">Anasayfa</a></li>
+            <li class="active">İstek Listem</li>
+        </ul>
+
+        <div class="shopping-cart v2 bd-7">
+            <div class="cmt-title text-center abs">
+                <h1 class="page-title v4">İstek Listem</h1>
+            </div>
+            <div class="table-responsive">
+                <table class="table cart-table">
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr class="item_cart">
+                                <td class="product-name flex align-center">
+                                    <form asp-action="Remove" method="post">
+                                        <input type="hidden" name="productId" value="@item.ProductId" />
+                                        <button class="btn-del btn btn-link p-0 btn-icon"><i class="ion-ios-close-empty"></i></button>
+                                    </form>
+                                    <div class="product-img">
+                                        <img src="@PathHelper.ToImagePath(item.Product.Images.FirstOrDefault()?.ImageUrl.ToString())" alt="Futurelife">
+                                    </div>
+                                    <div class="product-info">
+                                        <a href="#" title="">@item.Product.Name </a>
+                                    </div>
+                                </td>
+
+
+                                <td class="total-price">
+                                    <p class="price">@item.Product.Price.ToString("C2")</p>
+                                </td>
+                                <td class="w-status">
+                                    @if (item.Product.Stock.Quantity>0)
+                                        {
+                                        <p class="text-success">Stokta mevcut </p>
+                                    }else{
+                                        <p class="text-danger">Stokta yok</p>
+                                    }
+                                </td>
+                                <td class="w-button">                                   
+                                    <form asp-controller="Cart" asp-action="Add" method="post">
+                                        <input type="hidden" name="productId" value="@item.ProductId" />
+                                        <input type="hidden" name="quantity" value="1" />
+                                        <button class="btn-addcart btn-gradient">Sepete Ekle</button>
+                                    </form>
+                                </td>
+                            </tr>
+
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,47 @@
+﻿@using ECommerce.Web.Models.Order
+@{
+    ViewData["Title"] = "Payment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model UnifiedPaymentViewModel
+
+<div class="container container-240">
+    <div class="card p-3">
+        <div class="row flex pd">
+            <div class="col-md-10" style="margin:auto">
+                <div class="cmt-title text-center abs">
+                    <h1 class="page-title v1">Ödeme Yöntemi</h1>
+                </div>
+                <div class="page-content">
+                    <form asp-action="Payment" method="post">
+                        <input type="hidden" asp-for="OrderId" />
+
+                        <label asp-for="PaymentMethod">Ödeme Yöntemi</label>
+                        <select asp-for="PaymentMethod" class="form-control">
+                            @foreach (var method in Model.PaymentMethods)
+                            {
+                                <option value="@method.Name">@method.Name</option>
+                            }
+                        </select>
+                        <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+
+                        <!-- Banka Hesapları -->
+                        <div>
+                            <h5>Banka Hesapları</h5>
+                            <ul>
+                                @foreach (var bank in Model.BankAccounts)
+                                {
+                                    <li>@bank.BankName -@bank.AccountHolder -  @bank.IBAN</li>
+                                }
+                            </ul>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Ödemeyi Onayla</button>
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
