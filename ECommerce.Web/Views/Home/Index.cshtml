@@ -27,7 +27,9 @@
 
 </style>
 
-
+@section HomeHero {
+    <partial name="_HeroHome" model="Model" />
+}
 
 <!-- Kategori Simgeleri -->
 @await Html.PartialAsync("/Views/Shared/Partials/Category/_CategoryIcons.cshtml", Model.Categories)
@@ -51,15 +53,46 @@
 
 
         <!-- Best Sellers -->
-        <section  style="margin-top:50px">
-            @await Html.PartialAsync("~/Views/Shared/Partials/Product/_BestSellers.cshtml", Model.BestSellerProducts)
-        </section>
+    <div class="product-tab">
+        <div class="container container-240 shop-collection">
+            <div class="ecome-heading style2 spc4">
+                <div class="title-icon e-gradient">
+                    Çok Satanlar
+                </div>
+                <a href="/Store" class="btn-show">Daha Fazla Ürün<i class="ion-ios-arrow-forward"></i></a>
+            </div>
+
+            <div class="product-collection-grid product-grid">
+                <div class="row">
+                    <partial name="~/Views/Shared/Partials/Store/_ProductList.cshtml" model="Model.BestSellerProducts" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+       
 
         <!-- All Products -->
-        <section >
-            @await Html.PartialAsync("~/Views/Shared/Partials/Product/_AllProducts.cshtml", Model.AllProducts)
+    <div class="product-tab">
+        <div class="container container-240 shop-collection">
+            <div class="ecome-heading style2 spc4">
+                <div class="title-icon e-gradient">
+                    Tüm Ürünler
+                </div>
+                <a href="/Store" class="btn-show">Daha Fazla Ürün<i class="ion-ios-arrow-forward"></i></a>
+            </div>
 
-        </section>
+            <div class="product-collection-grid product-grid">
+                <div class="row">
+                    <partial name="~/Views/Shared/Partials/Store/_ProductList.cshtml" model="Model.AllProducts" />
+                </div>
+            </div>
+
+        </div>
+    </div>
 
     </div>
 

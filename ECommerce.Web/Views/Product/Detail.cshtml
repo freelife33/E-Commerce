@@ -5,94 +5,6 @@
     ViewData["Title"] = @Model.Name;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@* 
-<div class="container py-5">
-    <div class="row g-4">
-        <!-- Ürün görselleri -->
-        <div class="col-lg-6">
-            <!-- Büyük resim -->
-            <div class="border rounded shadow-sm mb-3 p-2 text-center bg-white">
-                <img id="mainImage" src="@PathHelper.ToImagePath(Model.CoverImageUrl)"
-                alt="@Model.Name" class="img-fluid rounded transition" style="max-height: 400px;" />
-            </div>
-
-            <!-- Thumbnail'lar -->
-            @if (Model.Images != null && Model.Images.Count > 0)
-            {
-                <div class="d-flex flex-wrap gap-2 justify-content-center">
-                    @foreach (var img in Model.Images)
-                    {
-                        <img src="@PathHelper.ToImagePath(img.ImageUrl)" alt="Alt Resim"
-                        class="img-thumbnail border change-main"
-                        style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
-                        data-full="@PathHelper.ToImagePath(img.ImageUrl)" />
-                    }
-                </div>
-            }
-        </div>
-
-        <!-- Ürün bilgileri -->
-        <div class="col-lg-6">
-            <div class="bg-white border rounded shadow-sm p-4 h-100">
-                <h1 class="h3 mb-3">@Model.Name</h1>
-                <p class="text-muted mb-1">@Model.CategoryName</p>
-                <h4 class="text-success mb-3">@Model.Price.ToString("C")</h4>
-
-                <p class="mb-4">@Model.Description</p>
-
-                <form method="post" asp-controller="Cart" asp-action="Add" class="mb-0">
-                    <input type="hidden" name="productId" value="@Model.Id" />
-                    <div class="mb-3">
-                        <label class="form-label">Adet</label>
-                        <input type="number" name="quantity" value="1" min="1" class="form-control w-25" />
-                    </div>
-                    <button type="submit" class="btn btn-dark btn-lg w-100">
-                        <i class="fa fa-shopping-cart me-2"></i> Sepete Ekle
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-@section Scripts {
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-        const thumbnails = document.querySelectorAll(".change-main");
-        const mainImage = document.getElementById("mainImage");
-
-        thumbnails.forEach(thumb => {
-        thumb.addEventListener("click", function () {
-        const newSrc = this.getAttribute("data-full");
-        if (mainImage.src !== newSrc) {
-        mainImage.classList.add("fade-out");
-
-        setTimeout(() => {
-        mainImage.src = newSrc;
-        mainImage.classList.remove("fade-out");
-        mainImage.classList.add("fade-in");
-        setTimeout(() => mainImage.classList.remove("fade-in"), 200);
-        }, 200);
-        }
-        });
-        });
-        });
-    </script>
-    <style>
-        .fade-out {
-        opacity: 0;
-        transition: opacity 0.2s ease;
-        }
-
-        .fade-in {
-        opacity: 1;
-        transition: opacity 0.2s ease;
-        }
-    </style>
-}
-
- *@
-
 
 <div class="wrappage">
     <!--content-->
@@ -179,7 +91,7 @@
                                 <img src="img/single/sony_brand.png" alt="">
                             </div>
                             <div class="product-sku">
-                                <label>SKU :</label><span> 8900105789430</span>
+                                <label>SKU :</label><span> @Model.Sku</span>
                             </div>
                             <div class="short-desc">
                                 <p class="product-desc">

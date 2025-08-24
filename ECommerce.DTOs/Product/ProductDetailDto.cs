@@ -15,6 +15,7 @@ namespace ECommerce.DTOs.Product
         public DateTime DiscountStartDate { get; set; }
         public DateTime DiscountEndDate { get; set; }
         public decimal? DiscountedPrice { get; set; }
+        public string Sku { get; set; }
 
         public int Stock { get; set; }
         public string? CategoryName { get; set; }

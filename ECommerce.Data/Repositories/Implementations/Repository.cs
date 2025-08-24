@@ -14,16 +14,20 @@ namespace ECommerce.Data.Repositories.Implementations
     {
 
         protected readonly AppDbContext _context;
-
+        protected DbSet<TEntity> Set => _context.Set<TEntity>();
         public Repository(AppDbContext context)
         {
             _context = context;
         }
 
+        public Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate)
+        => Set.AnyAsync(predicate);
         public async Task AddAsync(TEntity entity)
         {
             await _context.Set<TEntity>().AddAsync(entity);
         }
+
+        public IQueryable<TEntity> Query() => Set.AsQueryable();
 
         public async Task AddRangeAsync(IEnumerable<TEntity> entities)
         {

@@ -15,6 +15,7 @@ namespace ECommerce.Data.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasDefaultSchema("a.digil");
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Auction>()
@@ -44,7 +45,24 @@ namespace ECommerce.Data.Entities
                 .WithMany(r => r.UserRoles)
                 .HasForeignKey(ur => ur.RoleId);
 
-           
+            modelBuilder.Entity<Product>()
+        .HasIndex(p => p.Sku)
+        .IsUnique();
+
+            modelBuilder.Entity<ContactSetting>()
+    .HasMany(c => c.SocialLinks)
+    .WithOne(s => s.ContactSetting)
+    .HasForeignKey(s => s.ContactSettingId)
+    .OnDelete(DeleteBehavior.Cascade);
+
+
+            modelBuilder.Entity<CustomOrderAttachment>()
+    .HasOne(a => a.Request)
+    .WithMany(r => r.Attachments)
+    .HasForeignKey(a => a.CustomOrderRequestId)
+    .OnDelete(DeleteBehavior.Cascade);
+
+
 
         }
         public DbSet<Product> Products { get; set; }//24
@@ -75,9 +93,15 @@ namespace ECommerce.Data.Entities
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<Stock> Stocks { get; set; }
         public DbSet<CustomOrderRequest> CustomOrderRequests { get; set; }
+        public DbSet<CustomOrderAttachment> CustomOrderAttachments { get; set; }
         public DbSet<Address> Address { get; set; }
         public DbSet<BankAccount> BankAccounts { get; set; }
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
+        public DbSet<SystemSettings> SystemSettingses { get; set; }
+
+        public DbSet<ContactSetting> ContactSettings { get; set; }
+        public DbSet<SocialLink> SocialLinks { get; set; }
+        public DbSet<ContactMessage> ContactMessages { get; set; }
 
 
 

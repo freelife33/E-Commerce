@@ -2,7 +2,7 @@
 @model List<ProductListDto>
 
 <div class="product-tab">
-    <div class="container container-240">
+    <div class="container container-240 shop-collection">
         <div class="ecome-heading style2 spc4">
             <div class="title-icon e-gradient">
                 Çok Satanlar
@@ -10,17 +10,16 @@
             <a href="/Store" class="btn-show">Daha Fazla Ürün<i class="ion-ios-arrow-forward"></i></a>
         </div>
 
-        <div class="tab-content">
-            <div id="feature" class="tab-pane fade in active">
-                <div class="product-tab-pd js-multiple-row2">
+        
                     @foreach (var product in Model)
                     {
                         @await Html.PartialAsync("~/Views/Shared/Partials/Product/_ProductCard.cshtml", product)
 
                     }
-                </div>
-            </div>
-        </div>
+
     </div>
+
+
+
 </div>
 

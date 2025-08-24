@@ -31,6 +31,11 @@ namespace ECommerce.Data.Repositories.Implementations
             Payments = new PaymentRepository(_context);
             PaymentMethods = new PaymentMethodRepository(_context);
             BankAccounts = new BankAccountRepository(_context);
+            SystemSettings = new SystemSettingsRepository(_context);
+            ContactSettings = new ContactSettingRepository(_context);
+            ContactMessages = new ContactMessageRepository(_context);
+            SocialLinks = new SocialLinkRepository(_context);
+            CustomOrderRequests = new CustomOrderRequestRepository(_context);
         }
 
         public IProductRepository Products { get; private set; }
@@ -61,6 +66,16 @@ namespace ECommerce.Data.Repositories.Implementations
         public IPaymentMethod PaymentMethods { get; private set; }
 
         public IBankAccount BankAccounts { get; private set; }
+
+        public ISystemSettingsRepository SystemSettings { get; private set; }
+
+        public IContactSettingRepository ContactSettings{ get; private set; }
+
+        public IContactMessageRepository ContactMessages { get; private set; }
+
+        public ISocialLinkRepository SocialLinks { get; private set; }
+
+        public ICustomOrderRequestRepository CustomOrderRequests { get; private set; }
 
         public async Task<int> ComplateAsync()
         {

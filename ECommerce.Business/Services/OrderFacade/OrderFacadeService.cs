@@ -169,7 +169,7 @@ namespace ECommerce.Business.Services.OrderFacade
                 DiscountAmount = discount,
                 TotalAmount = subTotal,
                 OrderDate = DateTime.UtcNow,
-                Status = "Preparing"
+                Status = "Hazırlanıyor"
             };
 
             var newOrder = await _orderService.CreateOrderAsync(order);
@@ -330,7 +330,7 @@ namespace ECommerce.Business.Services.OrderFacade
             };
 
             await _paymentService.CreatePaymentAsync(payment);
-            await _orderService.UpdateOrderStatusAsync(order.Id, "WaitingTransfer");
+            await _orderService.UpdateOrderStatusAsync(order.Id, "Transfer Bekleniyor");
 
             return true;
         }

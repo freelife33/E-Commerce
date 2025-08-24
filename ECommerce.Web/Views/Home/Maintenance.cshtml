@@ -1,0 +1,17 @@
+﻿
+@{
+    ViewData["Title"] = "Maintenance";
+   // Layout = "~/Views/Shared/_Layout.cshtml";
+    var planned = ViewBag.PlannedEnd as DateTime?;
+}
+
+<div class="container text-center" style="padding:60px 0;">
+    <h1> Bakım Modu</h1>
+    <p class="lead">@ViewBag.Message</p>
+    @if (planned.HasValue)
+    {
+        <p>Tahmini bitiş: @planned.Value.ToString("dd.MM.yyyy HH:mm")</p>
+    }
+    <hr />
+    <p> Acil bir durum için: <a href="/account/login">Giriş</a></p>
+</div>

@@ -1,0 +1,60 @@
+﻿
+@{
+    ViewData["Title"] = "AccessDenied";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    ViewData["Title"] = "Erişim Engellendi";
+    var returnUrl = (string?)ViewData["ReturnUrl"];
+    var isAuth = User?.Identity?.IsAuthenticated ?? false;
+}
+
+<div class="container py-5">
+    <div class="text-center">
+        <i class="fa fa-ban fa-4x mb-3 text-danger"></i>
+        <h1 class="display-6">Erişim Engellendi</h1>
+        <p class="lead">
+            Bu sayfaya erişim yetkiniz yok.
+            @if (!isAuth)
+            {
+                <text>Devam etmek için lütfen giriş yapın.</text>
+            }
+            else
+            {
+                <text>Gerekli yetkiye sahip bir hesapla giriş yapmayı deneyin.</text>
+            }
+        </p>
+
+        <div class="mt-4">
+            <a class="btn btn-primary me-2" asp-controller="Home" asp-action="Index">Ana Sayfa</a>
+
+            @if (!isAuth)
+            {
+                <a class="btn btn-outline-secondary"
+                   asp-controller="Account" asp-action="Login"
+                   asp-route-returnUrl="@returnUrl">Giriş Yap</a>
+            }
+            else
+            {
+                <a class="btn btn-outline-secondary"
+                   asp-controller="Account" asp-action="Logout">Çıkış Yap</a>
+            }
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(returnUrl))
+        {
+            <div class="mt-3 small text-muted">
+                Önceki sayfa: <a href="@returnUrl">@returnUrl</a>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // İstersen uyarıyı SweetAlert ile de gösterebilirsin:
+         Swal.fire({ icon: 'error', title: 'Erişim engellendi', text: 'Bu sayfaya erişim yetkiniz yok.' });
+    </script>
+}
+

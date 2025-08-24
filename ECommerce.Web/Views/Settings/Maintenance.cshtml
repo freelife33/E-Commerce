@@ -1,0 +1,52 @@
+﻿@using ECommerce.Web.Models.Maintenance
+@{
+    ViewData["Title"] = "Maintenance";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@model MaintenanceViewModel
+<h2>Bakım Modu</h2>
+
+<form asp-action="Toggle" method="post" class="mb-3">
+    <input type="hidden" name="enable" value="@(Model.Enabled ? "false" : "true")" />
+    <button type="submit" class="btn @(Model.Enabled ? "btn-danger" : "btn-success")">
+        @(Model.Enabled ? "Bakım Modunu Kapat" : "Bakım Modunu Aç")
+    </button>
+</form>
+
+<form asp-action="Maintenance" method="post">
+    <div class="mb-3">
+        <label class="form-label">Durum</label>
+        <input class="form-control" value="@(Model.Enabled ? "Aktif" : "Pasif")" disabled />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Mesaj</label>
+        <textarea class="form-control" asp-for="Message" rows="3"></textarea>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Tahmini Bitiş</label>
+        <input type="datetime-local" class="form-control" asp-for="PlannedEnd" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">İzinli Roller (virgülle)</label>
+        <input class="form-control" asp-for="AllowedRoles" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">İzinli Path'ler (virgülle)</label>
+        <input class="form-control" asp-for="AllowedPaths" />
+        <div class="form-text">Örnek: /account/login,/home/maintenance,/health</div>
+    </div>
+    <div class="text-end">
+        <button class="btn btn-primary" type="submit">Kaydet</button>
+    </div>
+</form>
+
+@section Scripts {
+    @if (TempData["Success"] != null)
+    {
+        <script>
+            Swal.fire({ icon: 'success', title: 'Başarılı', text: '@TempData["Success"]' });
+        </script>
+    }
+}
+

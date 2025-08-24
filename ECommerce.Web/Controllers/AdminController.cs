@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using ECommerce.Business.Services;
 using ECommerce.DTOs.Product;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.Web.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly IProductService _productService;

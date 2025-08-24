@@ -23,6 +23,12 @@ namespace ECommerce.Data.Repositories.Interfaces
         IPaymentRepository Payments { get; }
         IPaymentMethod PaymentMethods { get; }
         IBankAccount BankAccounts { get; }
+        ISystemSettingsRepository SystemSettings { get; }
+
+        IContactSettingRepository ContactSettings { get; }
+        IContactMessageRepository ContactMessages { get; }
+        ISocialLinkRepository SocialLinks { get; }
+        ICustomOrderRequestRepository CustomOrderRequests { get; }
 
         Task<int> ComplateAsync();
         void Dispose();

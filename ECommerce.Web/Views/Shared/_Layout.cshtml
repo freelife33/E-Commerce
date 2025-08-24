@@ -4,10 +4,28 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>@ViewData["Title"] - webADGL</title>
+    <title>Cypwood - El Yapımı Ahşap Tasarımlar</title>
+    <meta name="description" content="Cypwood, el yapımı ahşap saatler, tablolar ve kişiye özel tasarımlar sunar. CNC ve el işçiliğini birleştiriyoruz. KKTC içi teslimat.">
+    <meta name="keywords" content="cypwood, ahşap, el yapımı, cnc, dekorasyon, hediyelik, saat, tablo, kişiye özel">
+    <meta name="author" content="Cypwood" />
+    <meta name="robots" content="index, follow" />
+
+    <meta property="og:title" content="Cypwood - El Yapımı Ahşap Tasarımlar" />
+    <meta property="og:description" content="Doğal ahşabın sıcaklığıyla hazırlanmış el yapımı saatler, tablolar ve kişiye özel tasarımlar." />
+    <meta property="og:image" content="https://cypwood.com/images/cypwood-preview.jpg" />
+    <meta property="og:url" content="https://cypwood.com" />
+    <meta property="og:type" content="website" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Cypwood - El Yapımı Ahşap Tasarımlar" />
+    <meta name="twitter:description" content="El yapımı ahşap saatler, tablolar ve kişiye özel tasarımlar." />
+    <meta name="twitter:image" content="https://cypwood.com/images/cypwood-preview.jpg" />
+
+    <link rel="icon" href="~/favicon.ico?v=2" />
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
     <link rel="stylesheet" href="~/template/assets/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/template/assets/css/font-awesome.min.css" /> 
+    <link rel="stylesheet" href="~/template/assets/css/font-awesome.min.css" />
     <link rel="stylesheet" href="~/template/assets/css/style.css" />
     <link rel="stylesheet" href="~/template/assets/css/owl.carousel.min.css" />
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
@@ -23,7 +41,7 @@
 
     @RenderSection("Styles", required: false)
 
-    
+
 
 </head>
 <body>
@@ -33,6 +51,7 @@
 
     <!-- Ana İçerik -->
     <main role="main" class="">
+        @RenderSection("HomeHero", required: false)
         @RenderBody()
     </main>
 
@@ -40,7 +59,7 @@
         var modalProducts = ViewBag.Products as List<ProductListDto>;
     }
 
-   @*  @if (modalProducts != null)
+    @*  @if (modalProducts != null)
     {
         @await Html.PartialAsync("_QuickViewModals", modalProducts)
     }
@@ -50,17 +69,17 @@
     @await Html.PartialAsync("_Footer")
 
 
-   
+
 
 
 
     <!-- JS -->
     <script src="~/template/assets/js/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
-    <script src="~/template/assets/js/bootstrap.js"></script> 
+    <script src="~/template/assets/js/bootstrap.js"></script>
     <script src="~/template/assets/js/owl.carousel.min.js"></script>
     <script src="~/template/assets/js/bootstrap.bundle.min.js"></script>
-   <script src="~/template/assets/js/slick.min.js"></script>
+    <script src="~/template/assets/js/slick.min.js"></script>
     <script src="~/template/assets/js/main.js"></script>
     <script src="~/template/assets/js/bootstrap-slider.min.js"></script>
     <!-- Scripts en sonuna -->

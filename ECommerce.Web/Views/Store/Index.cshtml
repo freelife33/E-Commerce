@@ -4,6 +4,10 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @using ECommerce.Web.Models;
 @model StoreIndexViewModel
+
+<!-- Kategori Simgeleri -->
+@await Html.PartialAsync("/Views/Shared/Partials/Category/_CategoryIcons.cshtml", Model.Categories)
+
 <div class="wrappage">
 
     <div class="container container-240 shop-collection">

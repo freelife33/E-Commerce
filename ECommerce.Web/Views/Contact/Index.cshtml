@@ -1,0 +1,84 @@
+﻿@using ECommerce.Web.Models.Contact;
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model ContactPageViewModel
+
+<div class="container my-4">
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <h3>Bize Ulaşın</h3>
+            <p>@Model.Settings.CompanyName</p>
+            <ul class="list-unstyled">
+                <li><i class="fa fa-location-pin me-2"></i>@Model.Settings.AddressLine, @Model.Settings.City / @Model.Settings.Country</li>
+                <li><i class="fa fa-phone me-2"></i>@Model.Settings.Phone1 @if (!string.IsNullOrEmpty(Model.Settings.Phone2))
+                    {
+                        <span> / @Model.Settings.Phone2</span>
+                    }</li>
+                <li><i class="fa fa-envelope me-2"></i>@Model.Settings.Email</li>
+                @if (!string.IsNullOrWhiteSpace(Model.Settings.WorkingHours))
+                {
+                    <li><i class="fa fa-clock me-2"></i>@Model.Settings.WorkingHours</li>
+                }
+            </ul>
+
+            <div class="d-flex gap-3 my-3">
+                @foreach (var s in Model.Settings.SocialLinks)
+                {
+                    <a href="@s.Url" target="_blank" rel="noopener" class="text-decoration-none">
+                        <i class="@s.IconCss fa-xl"></i>
+                    </a>
+                }
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(Model.Settings.MapEmbedUrl))
+            {
+                <div class="ratio ratio-4x3 border rounded">
+                    <iframe src="@Model.Settings.MapEmbedUrl" style="border:0;" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            }
+        </div>
+
+        <div class="col-lg-6">
+            <h3>Mesaj Gönder</h3>
+            <form asp-action="Index" method="post">
+                @Html.AntiForgeryToken()
+                <div class="mb-3">
+                    <label class="form-label">Ad Soyad</label>
+                    <input asp-for="Form.FullName" class="form-control" />
+                    <span asp-validation-for="Form.FullName" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">E-posta</label>
+                    <input asp-for="Form.Email" class="form-control" />
+                    <span asp-validation-for="Form.Email" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Konu</label>
+                    <input asp-for="Form.Subject" class="form-control" />
+                    <span asp-validation-for="Form.Subject" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Mesaj</label>
+                    <textarea asp-for="Form.Message" class="form-control" rows="5"></textarea>
+                    <span asp-validation-for="Form.Message" class="text-danger"></span>
+                </div>               
+
+                <button type="submit" class="btn btn-primary">Gönder</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // SweetAlert bildirimleri
+         const ok  = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(TempData["Success"]));
+        const err = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(TempData["Error"]));
+        if (ok) Swal.fire({icon:'success', title:'Gönderildi', text: ok});
+        if (err) Swal.fire({icon:'error', title:'Hata', text: err});
+    </script>
+}

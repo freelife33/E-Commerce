@@ -1,0 +1,107 @@
+﻿@using ECommerce.DTOs.CustomOrder
+@{
+   
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model CreateCustomOrderRequestDto
+@{
+    ViewData["Title"] = "Özel Sipariş";
+}
+<div class="container py-5">
+    <h2 class="mb-3">Kişiye Özel Ürün Talebi</h2>
+    <form asp-action="Index" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">Ad Soyad</label>
+                <input asp-for="FullName" class="form-control" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">E-posta</label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Telefon</label>
+                <input asp-for="Phone" class="form-control" />
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Ürün Türü</label>
+                <input asp-for="ProductType" class="form-control" placeholder="Saat, Tablo, Çerçeve..." />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Ölçüler</label>
+                <input asp-for="Dimensions" class="form-control" placeholder="Örn: 40x60 cm" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Adet</label>
+                <input asp-for="Quantity" type="number" min="1" class="form-control" />
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Ağaç Türü</label>
+                <input asp-for="WoodType" class="form-control" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Renk</label>
+                <input asp-for="Color" class="form-control" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Yüzey</label>
+                <input asp-for="Finish" class="form-control" placeholder="Yağ, Vernik, Epoksi..." />
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Bütçe (min)</label>
+                <input asp-for="BudgetMin" class="form-control" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Bütçe (max)</label>
+                <input asp-for="BudgetMax" class="form-control" />
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">İstenilen Tarih</label>
+                <input asp-for="DesiredDate" type="date" class="form-control" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Kazıma Yazısı (opsiyonel)</label>
+                <input asp-for="EngravingText" class="form-control" />
+            </div>
+
+            <div class="col-12">
+                <label class="form-label">Adres (opsiyonel)</label>
+                <input asp-for="Address" class="form-control" />
+            </div>
+
+            <div class="col-12">
+                <label class="form-label">Açıklama</label>
+                <textarea asp-for="AdditionalNote" class="form-control" rows="4"></textarea>
+            </div>
+
+            <div class="col-12">
+                <label class="form-label">@* Referans görseller (en fazla 5) *@</label>
+                <input type="file" name="files" multiple accept="image/*,.pdf" class="form-control" />
+            </div>
+
+            <div class="col-12">
+                <button class="btn btn-primary mt-2" type="submit">Gönder</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const ok  = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(TempData["Success"]));
+        const err = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(TempData["Error"]));
+        if (ok)  Swal.fire({icon:'success', title:'Gönderildi', text: ok});
+        if (err) Swal.fire({icon:'error', title:'Hata', text: err});
+    </script>
+}
+

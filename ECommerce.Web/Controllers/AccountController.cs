@@ -130,6 +130,8 @@ namespace ECommerce.Web.Controllers
             {
                 claims.Add(new Claim(ClaimTypes.Role, role.Role.Name));
             }
+            if (user.IsAdmin)
+                claims.Add(new Claim(ClaimTypes.Role, "Admin"));
 
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
@@ -143,8 +145,22 @@ namespace ECommerce.Web.Controllers
             };
 
 
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProperties);
         }
+
+
+
+        [AllowAnonymous]
+        public IActionResult AccessDenied(string? returnUrl = null)
+        {
+            // 403 olarak dönsün
+            Response.StatusCode = StatusCodes.Status403Forbidden;
+
+            // Varsa geldiği sayfayı göstermek için
+            ViewData["ReturnUrl"] = returnUrl ?? Request.Headers["Referer"].ToString();
+            return View();
+        }
+
 
         [Authorize]
         [HttpGet]
@@ -256,7 +272,7 @@ namespace ECommerce.Web.Controllers
                 CreatedDate = order.OrderDate,
                 Status = order.Status,
                 TotalAmount = order.TotalAmount,
-                ShippingAddress = order.Address.AddressLine,
+                ShippingAddress=order.Address.AddressLine,
                 Items = order.OrderDetails.Select(i => new OrderItemViewModel
                 {
                     ProductName = i.Product.Name,

@@ -28,6 +28,8 @@ namespace ECommerce.Data.Repositories.Interfaces
         Task UpdateAsync(TEntity entity);
         void Remove(TEntity entity);
         void RemoveRange(IEnumerable<TEntity> entities);
+        IQueryable<TEntity> Query();
+        Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate);
 
     }
 }

@@ -13,10 +13,11 @@ namespace ECommerce.Business.Managers
     public class OrderManager : IOrderService
     {
         private readonly IUnitOfWork _unitOfWork;
-
-        public OrderManager(IUnitOfWork unitOfWork)
+        private readonly IEmailService _emailService;
+        public OrderManager(IUnitOfWork unitOfWork, IEmailService emailService)
         {
             _unitOfWork = unitOfWork;
+            _emailService = emailService;
         }
 
         public async Task<bool> PlaceOrderAsync(int userId, int addressId, string couponCode = null)
@@ -66,7 +67,42 @@ namespace ECommerce.Business.Managers
             // 5. Sepeti temizle
             await _unitOfWork.Carts.ClearCartAsync(userId);
 
-            return await _unitOfWork.ComplateAsync() > 0;
+
+            // ✅ Kalıcılaştırma
+            var saved = await _unitOfWork.ComplateAsync() > 0;
+            if (!saved) return false;
+
+            // (Opsiyonel) sipariş numarası üretip kaydedin
+            var orderNumber = await GenerateOrderNumberAsync(order.Id);
+            // Eğer Order’da OrderNumber alanınız varsa set edin ve tekrar save edin
+            // order.OrderNumber = orderNumber;
+            // await _unitOfWork.ComplateAsync();
+
+            // Kullanıcı bilgisini çekin (adresde e-posta yoksa)
+            var user = await _unitOfWork.Users.GetByIdAsync(userId);
+
+            // E-posta içeriği
+            var subject = $"Siparişiniz alındı - {orderNumber}";
+            var body = $@"
+<b>Merhaba {(user?.FullName ?? "Müşterimiz")},</b><br/>
+Siparişiniz başarıyla alındı.<br/>
+Sipariş No: <b>{orderNumber}</b><br/>
+Toplam: <b>{order.TotalAmount:C2}</b><br/>
+Durum: <b>{order.Status}</b><br/><br/>
+Teşekkür ederiz.";
+
+            // E-posta hatası sipariş akışını bozmasın
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(user?.Email))
+                    await _emailService.SendAsync(user.Email, subject, body);
+            }
+            catch
+            {
+                // Loglayın; siparişi patlatmayın
+            }
+
+            return true;
         }
 
         public async Task<List<Order>> GetUserOrdersAsync(int userId)
@@ -99,7 +135,7 @@ namespace ECommerce.Business.Managers
         {
             var order = await _unitOfWork.Orders.GetByIdAsync(orderId);
             if (order == null)
-                throw new Exception("Order not found");
+                throw new Exception("Sipariş bulunamadı");
 
             order.Status = newStatus;
             await _unitOfWork.ComplateAsync();
@@ -107,7 +143,7 @@ namespace ECommerce.Business.Managers
 
         public async Task<List<Order>> GetOrdersByDateAsync(DateTime? date)
         {
-            var orders =await _unitOfWork.Orders.GetAllAsync(
+            var orders = await _unitOfWork.Orders.GetAllAsync(
                 o => date == null || o.OrderDate.Date == date.Value.Date,
                 "OrderDetails.Product,Cupon,Address");
 
@@ -124,7 +160,7 @@ namespace ECommerce.Business.Managers
             var daily = await _unitOfWork.Orders.GetAllAsync(o => o.OrderDate == date && o.Id <= orderId);
             var dailyCount = daily.Count();
 
-           
+
             return $"ORD-{date:yyyyMMdd}-{dailyCount.ToString("D5")}";
         }
 

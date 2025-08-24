@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -33,7 +34,12 @@ namespace ECommerce.Data.Entities
         public bool IsActive { get; set; } = true;
 
         public bool IsDeleted { get; set; } = false;
-           
+
+        [Required, MaxLength(64)]
+        public string Sku { get; set; } = null!;
+
+        public string Barcode { get; set; }
+
         public Stock Stock { get; set; } = null!;
 
         public ICollection<ProductImage> Images { get; set; } = new List<ProductImage>();

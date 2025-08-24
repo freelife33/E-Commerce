@@ -9,6 +9,7 @@ using ECommerce.DTOs.Product;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -79,7 +80,9 @@ namespace ECommerce.Business.Managers
         public async Task<bool> CreateProductAsync(CreateProductDto dto)
         {
             var product = _mapper.Map<Product>(dto);
+           
             product.IsActive = true;
+            product.Sku = "TEMP"+ Guid.NewGuid().ToString();
             product.CreateDate = DateTime.UtcNow;
             if (dto.Images != null && dto.Images.Any())
             {
@@ -102,8 +105,23 @@ namespace ECommerce.Business.Managers
 
 
             }
+            
 
             await _unitOfWork.Products.AddAsync(product);
+            await _unitOfWork.ComplateAsync();
+            
+            var categoryCode = BuildCategoryCode(dto.CategoryName);
+            var sku = $"{categoryCode}-{dto.CategoryId}-{DateTime.UtcNow:yyyy}-{product.Id:D6}";
+            string finalSku = sku;
+            int attempt = 0;
+            while (await _unitOfWork.Products.GetAllQueryable().AnyAsync(p => p.Sku == finalSku && p.Id != product.Id))
+            {
+                attempt++;
+                finalSku = $"{sku}-{attempt}";
+            }
+
+            product.Sku = finalSku;
+
             return await _unitOfWork.ComplateAsync() > 0;
         }
 
@@ -233,6 +251,33 @@ namespace ECommerce.Business.Managers
                 PageNumber = filter.Page,
                 PageSize = filter.PageSize
             };
+        }
+
+
+        private static string BuildCategoryCode(string? name)
+        {
+            if (string.IsNullOrWhiteSpace(name)) return "GEN";
+
+            // Trim + Upper
+            var upper = name.Trim().ToUpperInvariant().Normalize(NormalizationForm.FormD);
+
+            // Aksanları/işaretleri kaldır, harf-rakam dışını at
+            var sb = new StringBuilder(3);
+            foreach (var ch in upper)
+            {
+                var uc = CharUnicodeInfo.GetUnicodeCategory(ch);
+                if (uc == UnicodeCategory.NonSpacingMark) continue; // diakritikleri at
+
+                if (char.IsLetterOrDigit(ch))
+                {
+                    sb.Append(ch);
+                    if (sb.Length == 3) break;
+                }
+            }
+
+            var code = sb.ToString();
+            if (code.Length == 0) code = "GEN";
+            return code.PadRight(3, 'X'); // 3’ten kısaysa doldur
         }
     }
 }

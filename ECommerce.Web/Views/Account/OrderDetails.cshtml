@@ -7,46 +7,67 @@
 
 
 <div class="container container-240">
-    <div class="myaccount">
+    <div class="card p3">
         <div class="row flex pd">
-            <div class="account-element bd-7" style="margin:auto">
+            <div class="col-md-10" style="margin:auto">
                 <div class="cmt-title text-center abs">
-                    <h1 class="page-title v1">Sipariş Detayınız- #@Model.OrderId</h1>
+                    @* <h1 class="page-title p2">Sipariş Detayınız- #@Model.OrderId</h1> *@
                 </div>
-                <div class="page-content"> 
+                    <div class="container my-5">
+                        <div class="card shadow">
+                            <div class="card-header text-center">
+                                <h4 class="mb-0">Sipariş Detayınız - <span class="text-primary">#@Model.OrderId</span></h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-4 text-center">
+                                    <div class="col-md-3">
+                                        <p><strong>Tarih:</strong><br /> @Model.CreatedDate.ToString("dd.MM.yyyy HH:mm")</p>
+                                    </div>
+                                    <div class="col-md-3">
+                                        @if(Model.Status=="Tamamlandı"){
+                                        <p><strong>Durum:</strong><br /> <span class="badge bg-success">@Model.Status</span></p>
+                                        }else{
+                                        <p><strong>Durum:</strong><br /> <span class="badge bg-warning text-dark">@Model.Status</span></p>
+                                        }
+                                       
+                                    </div>
+                                    <div class="col-md-3">
+                                        <p><strong>Adres:</strong><br /> @Model.ShippingAddress</p>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <p><strong>Toplam Tutar:</strong><br /> <span class="text-success h5">@Model.TotalAmount ₺</span></p>
+                                    </div>
+                                </div>
 
-                    <p><strong>Tarih:</strong> @Model.CreatedDate.ToString("dd.MM.yyyy HH:mm")</p>
-                    <p><strong>Durum:</strong> @Model.Status</p>
-                    <p><strong>Adres:</strong> @Model.ShippingAddress</p>
-                    <p><strong>Toplam Tutar:</strong> @Model.TotalAmount ₺</p>
+                                <hr />
 
-                    <hr />
-
-                    <h4>Ürünler</h4>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Ürün</th>
-                                <th>Adet</th>
-                                <th>Birim Fiyat</th>
-                                <th>Toplam</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.Items)
-                            {
-                                <tr>
-                                    <td>@item.ProductName</td>
-                                    <td>@item.Quantity</td>
-                                    <td>@item.UnitPrice ₺</td>
-                                    <td>@item.Total ₺</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-
-
-                </div>
+                                <h5 class="mb-3">Ürünler</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover text-center align-middle">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>Ürün</th>
+                                                <th>Adet</th>
+                                                <th>Birim Fiyat</th>
+                                                <th>Toplam</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.Items)
+                                            {
+                                                <tr>
+                                                    <td>@item.ProductName</td>
+                                                    <td>@item.Quantity</td>
+                                                    <td>@item.UnitPrice ₺</td>
+                                                    <td>@(item.UnitPrice * item.Quantity) ₺</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
             </div>
         </div>
     </div>

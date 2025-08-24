@@ -22,6 +22,21 @@ namespace ECommerce.Data.Entities
         public string Address { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        public int Quantity { get; set; } = 1;
+        public string? Finish { get; set; }        // Yağ/Vernik/Epoksi
+        public string? EngravingText { get; set; } // Kazıma yazısı
+        public decimal? BudgetMin { get; set; }
+        public decimal? BudgetMax { get; set; }
+        public DateTime? DesiredDate { get; set; }
+
+        public CustomOrderStatus Status { get; set; } = CustomOrderStatus.New;
+        public decimal? QuoteAmount { get; set; }
+        public string? QuoteNote { get; set; }
+        public DateTime? QuotedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+
+        public ICollection<CustomOrderAttachment> Attachments { get; set; } = new List<CustomOrderAttachment>();
     }
 
 }

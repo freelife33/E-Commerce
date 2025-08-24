@@ -130,6 +130,7 @@ namespace ECommerce.Business.Managers
         public async Task<List<Order>> GetOrdersByUserIdAsync(int userId)
         {
             return await _context.Orders
+                .Include(x => x.Address)
                 .Where(o => o.UserId == userId)
                 .OrderByDescending(o => o.OrderDate)
                 .ToListAsync();
@@ -138,6 +139,7 @@ namespace ECommerce.Business.Managers
         public async Task<Order> GetOrderDetailAsync(int orderId, int userId)
         {
             var order= await _context.Orders
+                .Include(x => x.Address)
                 .Include(o => o.OrderDetails)
                     .ThenInclude(oi => oi.Product)
                 .FirstOrDefaultAsync(o => o.Id == orderId && o.UserId == userId);

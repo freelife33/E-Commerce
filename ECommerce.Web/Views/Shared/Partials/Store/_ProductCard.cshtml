@@ -151,8 +151,10 @@
                         <div class="col-md-6 col-sm-6">
                             <div class="product-img js-quickview-slide">
                                 <!--Foreach gelecek-->
+                               
                                 <div class="main-img">
-                                    <a href="#" class="hover-images effect"><img src="@Model.CoverImageUrl" alt="photo" class="img-reponsive"></a>
+                                    @* <a href="#" class="hover-images effect"><img src="@Model.CoverImageUrl" alt="photo" class="img-reponsive"></a> *@
+                                    <a href="/Product/Detail/@Model.Id" class="hover-images effect"><img src="@PathHelper.ToImagePath(Model.CoverImageUrl)" alt="photo" class="img-reponsive"></a>
                                 </div>
                                
                             </div>
@@ -216,3 +218,26 @@
     </div>
 </div>
 
+<script>
+    document.addEventListener('shown.bs.modal', function (e) {
+      if (!e.target.classList.contains('quickview-modal')) return;
+
+      // Lazy resimler data-src kullanıyorsa src'ye taşı
+      e.target.querySelectorAll('img[data-src]').forEach(function (img) {
+        img.src = img.dataset.src;
+        img.removeAttribute('data-src');
+      });
+
+      // Slick / Owl gibi slider varsa tazele
+      if (window.$) {
+        var $modal = $(e.target);
+        $modal.find('.slick-slider').slick && $modal.find('.slick-slider').slick('setPosition');
+        $modal.find('.owl-carousel').trigger && $modal.find('.owl-carousel').trigger('refresh.owl.carousel');
+      }
+
+      // Genel reflow (DevTools açılınca olan etkinin aynısı)
+      window.requestAnimationFrame(function () {
+        window.dispatchEvent(new Event('resize'));
+      });
+    });
+</script>

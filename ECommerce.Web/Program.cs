@@ -10,6 +10,7 @@ using System.Globalization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using ECommerce.Business.Mapping;
 using ECommerce.Business.Services.OrderFacade;
+using ECommerce.Web.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,8 +22,17 @@ builder.Services.AddControllersWithViews()
     .AddViewLocalization();
 
 // DbContext
+//builder.Services.AddDbContext<AppDbContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")),
+//    sql =>sql.MigrationsHistoryTable("__EFMigrationsHistory", "a.digil"));
+
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+{
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sql => sql.MigrationsHistoryTable("__EFMigrationsHistory", "a.digil"));
+});
 
 // Repositories & UnitOfWork
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -51,14 +61,25 @@ builder.Services.AddScoped<IPaymentService, PaymentManager>();
 builder.Services.AddScoped<IPaymentMethodService, PaymentMethodService>();
 builder.Services.AddScoped<IBankService, BankService>();
 builder.Services.AddScoped<IOrderFacadeService, OrderFacadeService>();
+builder.Services.AddScoped<IContactService, ContactService>();
+builder.Services.AddScoped<ICustomOrderService, CustomOrderService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
+
+builder.Services.AddMemoryCache();
+builder.Services.AddScoped<ISystemSettingsService, SystemSettingsService>();
 
 
 // AutoMapper
 // Fix for CS1503: Correcting the argument passed to AddAutoMapper  
+//builder.Services.AddAutoMapper(cfg =>
+//{
+//    cfg.AddMaps(AppDomain.CurrentDomain.GetAssemblies());
+//});
 builder.Services.AddAutoMapper(cfg =>
 {
-    cfg.AddMaps(AppDomain.CurrentDomain.GetAssemblies());
+    cfg.AddProfile<MappingProfile>();
+    cfg.AddProfile<ProductProfile>();
 });
 
 
@@ -99,7 +120,7 @@ app.UseRequestLocalization(new RequestLocalizationOptions
 });
 
 app.UseRouting();
-
+app.UseMiddleware<MaintenanceMiddleware>();
 app.UseAuthorization();
 
 // MVC route

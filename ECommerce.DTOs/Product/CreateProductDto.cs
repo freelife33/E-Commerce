@@ -16,8 +16,12 @@ namespace ECommerce.DTOs.Product
         [Required]
         public decimal Price { get; set; }
 
+        [Required, MaxLength(64)]
+        public string Sku { get; set; } = null!;
+
         [Required]
         public int CategoryId { get; set; }
+        public string? CategoryName { get; set; }
         public int Stock { get; set; }
         public bool IsActive { get; set; }
         public string? MainImage { get; set; }

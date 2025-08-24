@@ -1,0 +1,16 @@
+﻿using ECommerce.Data.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ECommerce.Business.Services
+{
+    public interface ISystemSettingsService
+    {
+        Task<SystemSettings> GetAsync();
+        Task UpdateAsync(SystemSettings settings);
+        Task ToggleMaintenanceAsync(bool enabled, string? message = null, DateTime? plannedEnd = null);
+    }
+}

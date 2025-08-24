@@ -304,6 +304,89 @@ namespace ECommerce.Data.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("ECommerce.Data.Entities.ContactMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IpAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Subject")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserAgent")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ContactMessages");
+                });
+
+            modelBuilder.Entity("ECommerce.Data.Entities.ContactSetting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AddressLine")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CompanyName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MapEmbedUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("WorkingHours")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ContactSettings");
+                });
+
             modelBuilder.Entity("ECommerce.Data.Entities.Cupon", b =>
                 {
                     b.Property<int>("Id")
@@ -338,6 +421,39 @@ namespace ECommerce.Data.Migrations
                     b.ToTable("Cupons");
                 });
 
+            modelBuilder.Entity("ECommerce.Data.Entities.CustomOrderAttachment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ContentType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CustomOrderRequestId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("FileSize")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomOrderRequestId");
+
+                    b.ToTable("CustomOrderAttachments");
+                });
+
             modelBuilder.Entity("ECommerce.Data.Entities.CustomOrderRequest", b =>
                 {
                     b.Property<int>("Id")
@@ -352,16 +468,31 @@ namespace ECommerce.Data.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal?>("BudgetMax")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("BudgetMin")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("Color")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DesiredDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Dimensions")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EngravingText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Finish")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullName")
@@ -372,6 +503,24 @@ namespace ECommerce.Data.Migrations
 
                     b.Property<string>("ProductType")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("QuoteAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("QuoteNote")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("QuotedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("WoodType")
                         .HasColumnType("nvarchar(max)");
@@ -609,6 +758,9 @@ namespace ECommerce.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Barcode")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
@@ -639,12 +791,20 @@ namespace ECommerce.Data.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("Sku")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
                     b.Property<DateTime>("UpdateDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("Sku")
+                        .IsUnique();
 
                     b.ToTable("Products");
                 });
@@ -819,6 +979,33 @@ namespace ECommerce.Data.Migrations
                     b.ToTable("Shipments");
                 });
 
+            modelBuilder.Entity("ECommerce.Data.Entities.SocialLink", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ContactSettingId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("IconCss")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContactSettingId");
+
+                    b.ToTable("SocialLinks");
+                });
+
             modelBuilder.Entity("ECommerce.Data.Entities.Stock", b =>
                 {
                     b.Property<int>("Id")
@@ -839,6 +1026,37 @@ namespace ECommerce.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Stocks");
+                });
+
+            modelBuilder.Entity("ECommerce.Data.Entities.SystemSettings", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsConfigured")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("MaintenanceAllowedPaths")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MaintenanceAllowedRoles")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("MaintenanceEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("MaintenanceMessage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("MaintenancePlannedEnd")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SystemSettingses");
                 });
 
             modelBuilder.Entity("ECommerce.Data.Entities.User", b =>
@@ -1046,6 +1264,17 @@ namespace ECommerce.Data.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("ECommerce.Data.Entities.CustomOrderAttachment", b =>
+                {
+                    b.HasOne("ECommerce.Data.Entities.CustomOrderRequest", "Request")
+                        .WithMany("Attachments")
+                        .HasForeignKey("CustomOrderRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Request");
+                });
+
             modelBuilder.Entity("ECommerce.Data.Entities.Favorite", b =>
                 {
                     b.HasOne("ECommerce.Data.Entities.Product", "Product")
@@ -1235,6 +1464,17 @@ namespace ECommerce.Data.Migrations
                     b.Navigation("Order");
                 });
 
+            modelBuilder.Entity("ECommerce.Data.Entities.SocialLink", b =>
+                {
+                    b.HasOne("ECommerce.Data.Entities.ContactSetting", "ContactSetting")
+                        .WithMany("SocialLinks")
+                        .HasForeignKey("ContactSettingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ContactSetting");
+                });
+
             modelBuilder.Entity("ECommerce.Data.Entities.Stock", b =>
                 {
                     b.HasOne("ECommerce.Data.Entities.Product", "Product")
@@ -1308,6 +1548,16 @@ namespace ECommerce.Data.Migrations
             modelBuilder.Entity("ECommerce.Data.Entities.Category", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("ECommerce.Data.Entities.ContactSetting", b =>
+                {
+                    b.Navigation("SocialLinks");
+                });
+
+            modelBuilder.Entity("ECommerce.Data.Entities.CustomOrderRequest", b =>
+                {
+                    b.Navigation("Attachments");
                 });
 
             modelBuilder.Entity("ECommerce.Data.Entities.Order", b =>

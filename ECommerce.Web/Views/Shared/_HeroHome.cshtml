@@ -1,0 +1,25 @@
+﻿@model HomeViewModel
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center gy-4">
+            <div class="col-lg-6">
+                <h1 class="display-6 fw-bold">@Model.HeroTitle</h1>
+                <p class="lead mb-4">@Model.HeroSubtitle</p>
+                <a class="btn btn-primary btn-lg me-2" asp-controller="Store" asp-action="Index">Mağazayı Gör</a>
+                <a class="btn btn-outline-secondary btn-lg" asp-controller="CustomOrder" asp-action="Index">Özel Sipariş</a>
+            </div>
+            <div class="col-lg-6 text-center">
+                @if (Model.HeroProductId.HasValue)
+                {
+                    <a asp-controller="Product" asp-action="Detail" asp-route-id="@Model.HeroProductId">
+                        <img src="@Model.HeroImageUrl" alt="Hero" class="img-fluid rounded-4 shadow-sm" loading="eager">
+                    </a>
+                }
+                else
+                {
+                    <img src="@Model.HeroImageUrl" alt="Hero" class="img-fluid rounded-4 shadow-sm" loading="eager">
+                }
+            </div>
+        </div>
+    </div>
+</section>
